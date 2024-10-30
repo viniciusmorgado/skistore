@@ -1,21 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using SkiStore.Infrastructure.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
+builder.Services.AddDbContext<StoreContext>(opt =>
+{
+    opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => {});});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
-
-// app.UseHttpsRedirection();
-
-// app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
