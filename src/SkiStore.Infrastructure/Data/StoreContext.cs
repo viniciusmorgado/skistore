@@ -5,7 +5,7 @@ namespace SkiStore.Infrastructure.Data;
 
 public class StoreContext(DbContextOptions options) : DbContext(options)
 {
-    public DbSet<Product> Products { get; init; }
+    public DbSet<Product?> Products { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
