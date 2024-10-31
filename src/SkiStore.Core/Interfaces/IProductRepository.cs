@@ -4,7 +4,7 @@ namespace SkiStore.Core.Interfaces;
 
 public interface IProductRepository
 {
-    Task<IReadOnlyList<Product>> GetAsync();
+    Task<IReadOnlyList<Product>> GetAsync(string? brand, string? type, string? sort);
     Task<Product> GetByIdAsync(int id);
     void Post(Product product);
     void Put(Product product);

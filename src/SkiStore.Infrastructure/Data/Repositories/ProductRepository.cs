@@ -7,9 +7,25 @@ namespace SkiStore.Infrastructure.Data.Repositories;
 
 public class ProductRepository(StoreContext context) : IProductRepository
 {
-    public async Task<IReadOnlyList<Product>> GetAsync()
+    public async Task<IReadOnlyList<Product>> GetAsync(string? brand, string? type, string? sort)
     {
-        return await context.Products.ToListAsync();
+        var query = context.Products.AsQueryable();
+        
+        // TODO: ToLower all the names of brands and types
+        if (!string.IsNullOrWhiteSpace(brand)) 
+            query = query.Where(p => p.Brand.Contains(brand));
+        
+        if (!string.IsNullOrWhiteSpace(type)) 
+            query = query.Where(p => p.Type.Contains(type));
+
+        query = sort switch
+        { 
+            "priceAsc" => query.OrderBy(p => p.Price),
+            "priceDesc" => query.OrderByDescending(p => p.Price),
+            _ => query.OrderBy(p => p.Name)
+        };
+        
+        return await query.ToListAsync();
     }
 
     public async Task<Product> GetByIdAsync(int id)

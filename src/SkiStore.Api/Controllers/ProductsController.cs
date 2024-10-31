@@ -10,9 +10,9 @@ namespace SkiStore.Api.Controllers;
 public class ProductsController(IProductRepository repository) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> Get()
+    public async Task<ActionResult<IEnumerable<Product>>> Get(string? brand, string? type, string? sort)
     {
-        return Ok(await repository.GetAsync());
+        return Ok(await repository.GetAsync(brand, type, sort));
     }
     
     [HttpGet("{id:int}")]
