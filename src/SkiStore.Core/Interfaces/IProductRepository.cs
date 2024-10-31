@@ -11,4 +11,7 @@ public interface IProductRepository
     void Delete(Product product);
     bool ProductExists(int id);
     Task<bool> SaveChangesAsync();
+    
+    Task<IReadOnlyList<string>> GetTypeAsync();
+    Task<IReadOnlyList<string>> GetBrandAsync();
 }

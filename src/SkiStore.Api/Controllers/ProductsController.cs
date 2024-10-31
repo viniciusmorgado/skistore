@@ -62,6 +62,19 @@ public class ProductsController(IProductRepository repository) : ControllerBase
         
         return NoContent();
     }
+
+    
+    [HttpGet("brands")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
+    {
+        return Ok(await repository.GetBrandAsync());
+    }
+    
+    [HttpGet("types")]
+    public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
+    {
+        return Ok(await repository.GetTypeAsync());
+    }
     
     // Validation Methods
     private static bool IsProductFound(Product? product)

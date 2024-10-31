@@ -41,4 +41,14 @@ public class ProductRepository(StoreContext context) : IProductRepository
     {
         return await context.SaveChangesAsync() > 0;
     }
+
+    public async Task<IReadOnlyList<string>> GetTypeAsync()
+    {
+        return await context.Products.Select(p => p.Type).Distinct().ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<string>> GetBrandAsync()
+    {
+        return await context.Products.Select(p => p.Brand).Distinct().ToListAsync();
+    }
 }
