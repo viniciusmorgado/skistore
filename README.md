@@ -39,3 +39,26 @@ The PostgreSQL container runs with these specifications:
 - Port: 5432 (default)
 
 These resources are sufficient for local development.
+
+## Contributing
+
+This project demonstrates two different approaches to repository implementation:
+
+1. **Main Repository (Traditional Pattern)**
+    - Located in the main repository
+    - Uses conventional repository pattern implementation
+
+2. **Main-Generic Repository**
+    - Implements generic repository with specification pattern
+    - Available in the generic repository branch
+
+### Contribution Guidelines
+
+When contributing to this project:
+1. Assess your use case requirements
+2. Choose the appropriate repository implementation
+3. Follow the existing pattern in your chosen branch
+4. Maintain consistent code style
+5. Include unit tests for new features
+
+The choice between implementations should be based on your specific project requirements and needs.
