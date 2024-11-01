@@ -1,5 +1,6 @@
 #nullable disable
 using Microsoft.AspNetCore.Mvc;
+using SkiStore.Core.Base.Interfaces;
 using SkiStore.Core.Entities;
 using SkiStore.Core.Interfaces;
 
@@ -7,12 +8,12 @@ namespace SkiStore.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(IProductRepository repository) : ControllerBase
+public class ProductsController(IGenericRepository<Product> repository, IProductRepository productRepository) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> Get(string? brand, string? type, string? sort)
     {
-        return Ok(await repository.GetAsync(brand, type, sort));
+        return Ok(await repository.GetAllAsync());
     }
     
     [HttpGet("{id:int}")]
@@ -39,13 +40,13 @@ public class ProductsController(IProductRepository repository) : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Put(int id, Product product)
     {
-        if (!IsProductValid(product)) return BadRequest();
-        if (!IsProductExisting(id)) return NotFound();
-        if (!IsIdMatchingProduct(id, product)) return BadRequest();
+        if (!IsProductValid(product)) return BadRequest("Product is not valid");
+        if (!IsProductExisting(id)) return NotFound("Product do not exists");
+        if (!IsIdMatchingProduct(id, product)) return BadRequest("Id do not match the product");
         
         repository.Put(product);
         
-        if (!await IsSaveSuccessful()) return BadRequest();
+        if (!await IsSaveSuccessful()) return BadRequest("Product do not successfully saved");
         
         return NoContent();
     }
@@ -62,18 +63,17 @@ public class ProductsController(IProductRepository repository) : ControllerBase
         
         return NoContent();
     }
-
     
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
-        return Ok(await repository.GetBrandAsync());
+        return Ok(await productRepository.GetBrandAsync());
     }
     
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
-        return Ok(await repository.GetTypeAsync());
+        return Ok(await productRepository.GetTypeAsync());
     }
     
     // Validation Methods
@@ -84,7 +84,7 @@ public class ProductsController(IProductRepository repository) : ControllerBase
     
     private bool IsProductExisting(int id)
     {
-        return repository.ProductExists(id);
+        return repository.Exists(id);
     }
     
     private static bool IsProductValid(Product product)
