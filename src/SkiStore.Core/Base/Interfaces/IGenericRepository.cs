@@ -10,5 +10,5 @@ public interface IGenericRepository<T> where T : BaseEntity
     void Put(T entity);
     void Delete(T entity);
     Task<bool> SaveChangesAsync();
-    Task<bool> Exists();
+    bool Exists(int id);
 }

@@ -1,3 +1,5 @@
+#nullable disable
+using Microsoft.EntityFrameworkCore;
 using SkiStore.Core.Base.Entities;
 using SkiStore.Core.Base.Interfaces;
 
@@ -5,38 +7,38 @@ namespace SkiStore.Infrastructure.Data.Base.Repositories;
 
 public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> where T : BaseEntity
 {
-    public Task<T> GetByIdAsync(int id)
+    public async Task<T> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await context.Set<T>().FindAsync(id);
     }
 
-    public Task<IReadOnlyList<T>> GetAllAsync()
+    public async Task<IReadOnlyList<T>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await context.Set<T>().ToListAsync();
     }
 
     public void Post(T entity)
     {
-        throw new NotImplementedException();
+        context.Set<T>().Add(entity);
     }
 
     public void Put(T entity)
     {
-        throw new NotImplementedException();
+        context.Set<T>().Attach(entity);
     }
 
     public void Delete(T entity)
     {
-        throw new NotImplementedException();
+        context.Set<T>().Remove(entity);
     }
 
-    public Task<bool> SaveChangesAsync()
+    public async Task<bool> SaveChangesAsync()
     {
-        throw new NotImplementedException();
+        return await context.SaveChangesAsync() > 0;
     }
-
-    public Task<bool> Exists()
+    
+    public bool Exists(int id)
     {
-        throw new NotImplementedException();
+        return context.Set<T>().Any(x => x.Id == id);
     }
 }
