@@ -13,7 +13,7 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> Get(string? brand, string? type, string? sort)
     {
-        var spec = new ProductSpec(brand, type);
+        var spec = new ProductSpec(brand, type, sort);
         var products = await repository.GetAllWithSpec(spec);
         
         return Ok(products);
