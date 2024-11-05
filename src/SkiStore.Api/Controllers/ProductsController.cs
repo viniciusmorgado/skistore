@@ -8,7 +8,7 @@ namespace SkiStore.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ProductsController(IGenericRepository<Product> repository, IProductRepository productRepository) : ControllerBase
+public class ProductsController(IGenericRepository<Product> repository) : ControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> Get(string? brand, string? type, string? sort)
@@ -71,13 +71,15 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
-        return Ok(await productRepository.GetBrandAsync());
+        var spec = new BrandSpec();
+        return Ok(await repository.GetAllWithSpec(spec));
     }
 
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
-        return Ok(await productRepository.GetTypeAsync());
+        var spec = new TypeSpec();
+        return Ok(await repository.GetAllWithSpec(spec));
     }
 
     // Validation Methods

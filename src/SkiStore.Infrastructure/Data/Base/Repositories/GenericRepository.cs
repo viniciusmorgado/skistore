@@ -17,6 +17,13 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
         return await ApplySpec(spec).FirstOrDefaultAsync();
     }
 
+#pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+    public async Task<TResult?> GetEntityWithSpec<TResult>(ISpecification<T, TResult> spec)
+    {
+        return await ApplySpec(spec).FirstOrDefaultAsync();
+    }
+#pragma warning restore CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
+
     public async Task<IReadOnlyList<T>> GetAllAsync()
     {
         return await context.Set<T>().ToListAsync();
@@ -25,6 +32,11 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
     {
         return await ApplySpec(spec).ToListAsync();
     }
+    public async Task<IReadOnlyList<TResult>> GetAllWithSpec<TResult>(ISpecification<T, TResult> spec)
+    {
+        return await ApplySpec(spec).ToListAsync();
+    }
+
 
     // REST Methods
     public void Post(T entity)
@@ -48,9 +60,14 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
         return context.Set<T>().Any(x => x.Id == id);
     }
 
+
     // Helpers
     private IQueryable<T> ApplySpec(ISpecification<T> spec)
     {
         return SpecsEvaluator<T>.Query(context.Set<T>().AsQueryable(), spec);
+    }
+    private IQueryable<TResult> ApplySpec<TResult>(ISpecification<T, TResult> spec)
+    {
+        return SpecsEvaluator<T>.Query<T, TResult>(context.Set<T>().AsQueryable(), spec);
     }
 }
