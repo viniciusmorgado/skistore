@@ -18,3 +18,12 @@ public class BaseSpec<T>(Expression<Func<T, bool>>? criteria) : ISpecification<T
         OrderByDescending = orderByDesc;
     }
 }
+
+public class BaseSpec<T, TResult>(Expression<Func<T, bool>> criteria) : BaseSpec<T>(criteria), ISpecification<T, TResult>
+{
+    public Expression<Func<T, TResult>>? Select { get; private set;}
+    protected void AddSelect(Expression<Func<T, TResult>> selectExpression)
+    {
+        Select = selectExpression;
+    }
+}
