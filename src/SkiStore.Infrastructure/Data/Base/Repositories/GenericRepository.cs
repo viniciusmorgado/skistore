@@ -24,7 +24,7 @@ public class GenericRepository<T>(StoreContext context) : IGenericRepository<T> 
 
     public void Put(T entity)
     {
-        context.Set<T>().Attach(entity);
+        context.Set<T>().Update(entity);
     }
 
     public void Delete(T entity)

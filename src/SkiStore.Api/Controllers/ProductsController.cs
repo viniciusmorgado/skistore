@@ -1,4 +1,3 @@
-#nullable disable
 using Microsoft.AspNetCore.Mvc;
 using SkiStore.Core.Base.Interfaces;
 using SkiStore.Core.Entities;
@@ -15,7 +14,7 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
     {
         return Ok(await repository.GetAllAsync());
     }
-    
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetById(int id)
     {
@@ -24,7 +23,7 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
         
         return Ok(product);
     }
-    
+
     [HttpPost]
     public async Task<ActionResult<Product>> Post(Product product)
     {
@@ -36,7 +35,7 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
         
         return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
     }
-    
+
     [HttpPut("{id:int}")]
     public async Task<ActionResult> Put(int id, Product product)
     {
@@ -44,13 +43,14 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
         if (!IsProductExisting(id)) return NotFound("Product do not exists");
         if (!IsIdMatchingProduct(id, product)) return BadRequest("Id do not match the product");
         
+        product.Id = id;
         repository.Put(product);
         
         if (!await IsSaveSuccessful()) return BadRequest("Product do not successfully saved");
         
         return NoContent();
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
@@ -63,30 +63,30 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
         
         return NoContent();
     }
-    
+
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
         return Ok(await productRepository.GetBrandAsync());
     }
-    
+
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
         return Ok(await productRepository.GetTypeAsync());
     }
-    
+
     // Validation Methods
     private static bool IsProductFound(Product? product)
     {
         return product is not null;
     }
-    
+
     private bool IsProductExisting(int id)
     {
         return repository.Exists(id);
     }
-    
+
     private static bool IsProductValid(Product product)
     {
         return product is not null && 
@@ -97,12 +97,12 @@ public class ProductsController(IGenericRepository<Product> repository, IProduct
                !string.IsNullOrEmpty(product.Brand) &&
                product.Price > 0;
     }
-    
+
     private static bool IsIdMatchingProduct(int id, Product product)
     {
         return product.Id == id;
     }
-    
+
     private async Task<bool> IsSaveSuccessful()
     {
         return await repository.SaveChangesAsync();
