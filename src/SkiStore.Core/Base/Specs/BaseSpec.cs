@@ -3,7 +3,8 @@ using SkiStore.Core.Base.Interfaces;
 
 namespace SkiStore.Core.Base.Specs;
 
-public class BaseSpec<T>(Expression<Func<T, bool>> criteria) : ISpecification<T>
+public class BaseSpec<T>(Expression<Func<T, bool>>? criteria) : ISpecification<T>
 {
-    public Expression<Func<T, bool>> Criteria => criteria;
+    protected BaseSpec() : this(null) { }
+    public Expression<Func<T, bool>>? Criteria => criteria;
 }
