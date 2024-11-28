@@ -5,12 +5,12 @@ namespace SkiStore.Core.Specs;
 
 public class ProductSpec : BaseSpec<Product>
 {
-    public ProductSpec(string? brand, string? type, string? sort) : base(x => 
-        (string.IsNullOrWhiteSpace(brand) || x.Brand == brand) &&
-        (string.IsNullOrWhiteSpace(type) || x.Type == type)
-    ) 
+    public ProductSpec(ProductSpecParams specParams) : base(x => 
+        (specParams.Brands.Count == 0 || specParams.Brands.Contains(x.Brand)) &&
+        (specParams.Types.Count == 0 || specParams.Brands.Contains(x.Type))
+    ) // !specParams.Types.Any()
     { 
-        switch (sort)
+        switch (specParams.Sort)
         {
             case "priceAsc":
                 AddOrderBy(x => x.Price);
