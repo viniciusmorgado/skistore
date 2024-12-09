@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SkiStore.Core.Base.Interfaces;
 using SkiStore.Core.Entities;
-using SkiStore.Core.Interfaces;
 using SkiStore.Core.Specs;
 
 namespace SkiStore.Api.Controllers;
@@ -11,9 +10,9 @@ namespace SkiStore.Api.Controllers;
 public class ProductsController(IGenericRepository<Product> repository) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> Get(string? brand, string? type, string? sort)
+    public async Task<ActionResult<IEnumerable<Product>>> Get([FromQuery] ProductSpecParams specParams)
     {
-        var spec = new ProductSpec(brand, type, sort);
+        var spec = new ProductSpec(specParams);
         var products = await repository.GetAllWithSpec(spec);
         
         return Ok(products);
