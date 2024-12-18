@@ -1,4 +1,3 @@
-#nullable disable
 using Microsoft.EntityFrameworkCore;
 using SkiStore.Core.Entities;
 using SkiStore.Core.Interfaces;
@@ -30,7 +29,9 @@ public class ProductRepository(StoreContext context) : IProductRepository
 
     public async Task<Product> GetByIdAsync(int id)
     {
+#pragma warning disable CS8603 // Possible null reference return.
         return await context.Products.FindAsync(id);
+#pragma warning restore CS8603 // Possible null reference return.
     }
 
     public void Post(Product product)

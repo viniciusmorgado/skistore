@@ -2,25 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": ".NET Build",
-      "type": "clr",
+      "name": ".NET Run",
+      "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
       "program": "${workspaceFolder}/src/SkiStore.Api/bin/Debug/net8.0/SkiStore.Api.dll",
-      "args": [],
       "cwd": "${workspaceFolder}/src/SkiStore.Api",
-      "console": "internalConsole",
-      "stopAtEntry": false
-    },
-    {
-      "name": ".NET Direct",
-      "type": "clr",
-      "request": "launch",
-      "program": "${workspaceFolder}/src/SkiStore.Api/bin/Debug/net8.0/SkiStore.Api.dll",
-      "args": [],
-      "cwd": "${workspaceFolder}/src/SkiStore.Api",
-      "console": "internalConsole",
-      "stopAtEntry": false
+      "stopAtEntry": false,
+      "env": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   ]
 }

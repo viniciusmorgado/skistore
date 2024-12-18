@@ -1,3 +1,4 @@
+#nullable enable
 using Microsoft.AspNetCore.Mvc;
 using SkiStore.Core.Base.Interfaces;
 using SkiStore.Core.Entities;
