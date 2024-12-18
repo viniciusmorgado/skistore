@@ -10,7 +10,6 @@ public class ProductRepository(StoreContext context) : IProductRepository
     {
         var query = context.Products.AsQueryable();
         
-        // TODO: ToLower all the names of brands and types
         if (!string.IsNullOrWhiteSpace(brand))
             query = query.Where(p => p.Brand.Contains(brand));
         
