@@ -5,11 +5,11 @@ namespace SkiStore.Core.Specs;
 
 public class ProductSpec : BaseSpec<Product>
 {
-    public ProductSpec(ProductSpecParams specParams) : base(x => 
-        (specParams.Brands.Count == 0 || specParams.Brands.Contains(x.Brand)) &&
-        (specParams.Types.Count == 0 || specParams.Brands.Contains(x.Type))
-    ) // !specParams.Types.Any()
-    { 
+    public ProductSpec(ProductSpecParams specParams) : base(x =>
+        (specParams.Brands.Count == 0 || specParams.Brands.Select(b => b.ToLower()).Contains(x.Brand.ToLower())) &&
+        (specParams.Types.Count == 0 || specParams.Types.Select(t => t.ToLower()).Contains(x.Type.ToLower()))
+    )
+    {
         switch (specParams.Sort)
         {
             case "priceAsc":
