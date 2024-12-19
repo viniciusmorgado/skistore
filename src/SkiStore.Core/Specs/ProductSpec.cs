@@ -10,6 +10,8 @@ public class ProductSpec : BaseSpec<Product>
         (specParams.Types.Count == 0 || specParams.Types.Select(t => t.ToLower()).Contains(x.Type.ToLower()))
     )
     {
+        ApplyPaging(specParams.PageSize * (specParams.PageIndex -1), specParams.PageSize);
+
         switch (specParams.Sort)
         {
             case "priceAsc":

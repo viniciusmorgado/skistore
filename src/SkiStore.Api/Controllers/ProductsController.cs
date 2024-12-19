@@ -1,5 +1,6 @@
 #nullable enable
 using Microsoft.AspNetCore.Mvc;
+using SkiStore.Api.RequestHelpers;
 using SkiStore.Core.Base.Interfaces;
 using SkiStore.Core.Entities;
 using SkiStore.Core.Specs;
@@ -15,8 +16,10 @@ public class ProductsController(IGenericRepository<Product> repository) : Contro
     {
         var spec = new ProductSpec(specParams);
         var products = await repository.GetAllWithSpec(spec);
+        var count  = await repository.CountAsync(spec);
+        var pagination = new Pagination<Product>(specParams.PageIndex, specParams.PageSize, count, products);
         
-        return Ok(products);
+        return Ok(pagination);
     }
 
     [HttpGet("{id:int}")]
