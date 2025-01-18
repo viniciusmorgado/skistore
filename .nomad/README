@@ -1,0 +1,5 @@
+Nomad and pot are used to deploy this application to FreeBSD systems and scale it using a Kubernetes-like approach via jails, so this application are prepare to run on both systems Linux and FreeBSD.
+
+
+https://wiki.freebsd.org/.NET
+https://papers.freebsd.org/2020/fosdem/pizzamig-orchestrating_jails_with_nomad_and_pot/
