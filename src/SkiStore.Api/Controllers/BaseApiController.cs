@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using SkiStore.Api.RequestHelpers;
 using SkiStore.Core.Base.Entities;
 using SkiStore.Core.Base.Interfaces;
-using SkiStore.Infrastructure.Data.Base.Repositories;
 
 namespace SkiStore.Api.Controllers;
 
