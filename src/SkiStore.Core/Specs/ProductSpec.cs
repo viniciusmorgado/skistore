@@ -5,7 +5,8 @@ namespace SkiStore.Core.Specs;
 
 public class ProductSpec : BaseSpec<Product>
 {
-    public ProductSpec(ProductSpecParams specParams) : base(x =>
+    public ProductSpec(ProductSpecParams specParams) : base(x => 
+        (string.IsNullOrEmpty(specParams.Search) || x.Name.ToLower().Contains(specParams.Search)) &&
         (specParams.Brands.Count == 0 || specParams.Brands.Select(b => b.ToLower()).Contains(x.Brand.ToLower())) &&
         (specParams.Types.Count == 0 || specParams.Types.Select(t => t.ToLower()).Contains(x.Type.ToLower()))
     )
