@@ -13,11 +13,6 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     public async Task<ActionResult<IEnumerable<Product>>> Get([FromQuery] ProductSpecParams specParams)
     {
         var spec = new ProductSpec(specParams);
-        // var products = await repository.GetAllWithSpec(spec);
-        // var count  = await repository.CountAsync(spec);
-        // var pagination = new Pagination<Product>(specParams.PageIndex, specParams.PageSize, count, products);
-        
-        // return Ok(pagination);
         return await CreatedPagedResult(repository, spec, specParams.PageIndex, specParams.PageSize);
     }
 
