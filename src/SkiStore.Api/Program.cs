@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SkiStore.Api.Middleware;
 using SkiStore.Core.Base.Interfaces;
 using SkiStore.Core.Interfaces;
 using SkiStore.Infrastructure.Data;
@@ -34,5 +35,6 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred while migrating the database.");
     }
 }
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 app.Run();
