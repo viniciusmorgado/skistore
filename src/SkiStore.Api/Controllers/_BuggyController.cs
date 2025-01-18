@@ -1,6 +1,7 @@
 #if DEBUG
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Mvc;
+using SkiStore.Api.DTOs;
 using SkiStore.Core.Entities;
 
 namespace SkiStore.Api.Controllers;
@@ -54,7 +55,7 @@ public class _BuggyController : BaseApiController
     }
 
     [HttpPost("validationerror")]
-    public IActionResult GetValidationError(Product product)
+    public IActionResult GetValidationError(CreateProductDTO product)
     {
         return Ok();
     }
