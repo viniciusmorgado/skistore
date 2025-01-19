@@ -23,9 +23,30 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
+  redis:
+    container_name: skistore-redis
+    image: redis:8.0-M02-alpine3.21
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - skistore
+    volumes:
+      - skistore-redis:/data
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
 volumes:
   skistore-data:
     name: skistore-data
+  skistore-redis:
+    name: skistore-redis
 
 networks:
   skistore:
