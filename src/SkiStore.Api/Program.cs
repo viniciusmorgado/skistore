@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SkiStore.Api.Middleware;
 using SkiStore.Core.Base.Interfaces;
-using SkiStore.Core.Entities;
 using SkiStore.Core.Interfaces;
 using SkiStore.Infrastructure.Data;
 using SkiStore.Infrastructure.Data.Base.Repositories;
