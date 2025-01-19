@@ -23,18 +23,17 @@ public class ExceptionMiddleware(IHostEnvironment environment, RequestDelegate n
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-        var response = environment.IsDevelopment() 
-            ? new ApiErrorResponse(context.Response.StatusCode, exception.Message, exception.StackTrace)
-            : new ApiErrorResponse(context.Response.StatusCode, exception.Message, "Internal Server Error");
-
-        // TODO: Verify the cache here.
-        var options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-
-        var json = JsonSerializer.Serialize(response, options);
-
-        return context.Response.WriteAsync(json);
+        return context.Response.WriteAsync(
+            JsonSerializer.Serialize(
+                environment.IsDevelopment()
+                    ? new ApiErrorResponse(context.Response.StatusCode, exception.Message, exception.StackTrace)
+                    : new ApiErrorResponse(context.Response.StatusCode, exception.Message, "Internal Server Error"),
+                // TODO: Verify the cache here.
+                new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                }
+            )
+        );
     }
 }

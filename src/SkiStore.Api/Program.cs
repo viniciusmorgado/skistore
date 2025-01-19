@@ -24,7 +24,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(opt =>
         )
     );
 });
-builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => {});});
+builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => { }); });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddCors();
@@ -43,14 +43,14 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while migrating the database.");
+        services.GetRequiredService<ILogger<Program>>()
+                .LogError(ex, "An error occurred while migrating the database.");
     }
 }
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(x => x
    .AllowAnyHeader()
    .AllowAnyMethod()
-   .WithOrigins("http://localhost:5001","https://localhost:5001","https://api-skistore.donatto.dev.br")); // TODO: Move to appsettings.json
+   .WithOrigins("http://localhost:5001", "https://localhost:5001", "https://api-skistore.donatto.dev.br")); // TODO: Move to appsettings.json
 app.MapControllers();
 app.Run();

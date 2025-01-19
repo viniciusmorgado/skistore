@@ -23,6 +23,8 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     public async Task<ActionResult<Product>> GetById(int id)
     {
         var product = await repository.GetByIdAsync(id);
+
+        // TODO: Move this to a validator class.
         if (!IsProductFound(product)) return NotFound();
         
         return Ok(product);
@@ -59,6 +61,8 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     public async Task<ActionResult> Delete(int id)
     {
         var product = await repository.GetByIdAsync(id);
+        
+        // TODO: Move this to a validator class.
         if (!IsProductFound(product)) return NotFound();
         
         repository.Delete(product);
