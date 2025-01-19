@@ -11,8 +11,12 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> Get([FromQuery] ProductSpecParams specParams)
     {
-        var spec = new ProductSpec(specParams);
-        return await CreatedPagedResult(repository, spec, specParams.PageIndex, specParams.PageSize);
+        return await CreatedPagedResult(
+            repository, 
+            new ProductSpec(specParams),
+            specParams.PageIndex,
+            specParams.PageSize
+        );
     }
 
     [HttpGet("{id:int}")]
@@ -67,15 +71,13 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
-        var spec = new BrandSpec();
-        return Ok(await repository.GetAllWithSpec(spec));
+        return Ok(await repository.GetAllWithSpec(new BrandSpec()));
     }
 
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
-        var spec = new TypeSpec();
-        return Ok(await repository.GetAllWithSpec(spec));
+        return Ok(await repository.GetAllWithSpec(new TypeSpec()));
     }
 
     // Validation Methods
