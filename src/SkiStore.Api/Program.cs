@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using SkiStore.Api.Middleware;
 using SkiStore.Core.Base.Interfaces;
@@ -24,10 +25,19 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(opt =>
         )
     );
 });
+
 builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => { }); });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader()
+              .AllowAnyMethod()
+              .WithOrigins(builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>());
+    });
+});
 // TODO: Use reflections to automatically initiate any service (including repositories above).
 builder.Services.AddSingleton<ICartService, CartService>();
 
@@ -48,9 +58,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 app.UseMiddleware<ExceptionMiddleware>();
-app.UseCors(x => x
-   .AllowAnyHeader()
-   .AllowAnyMethod()
-   .WithOrigins("http://localhost:5001", "https://localhost:5001", "https://api-skistore.donatto.dev.br")); // TODO: Move to appsettings.json
+app.UseCors("CorsPolicy");
 app.MapControllers();
 app.Run();

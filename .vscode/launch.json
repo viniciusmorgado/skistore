@@ -6,7 +6,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/src/SkiStore.Api/bin/Debug/net8.0/SkiStore.Api.dll",
+      "program": "${workspaceFolder}/src/SkiStore.Api/bin/Debug/net9.0/SkiStore.Api.dll",
       "cwd": "${workspaceFolder}/src/SkiStore.Api",
       "stopAtEntry": false,
       "env": {
