@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using SkiStore.Api.Middleware;
 using SkiStore.Core.Base.Interfaces;
+using SkiStore.Core.Entities;
 using SkiStore.Core.Interfaces;
 using SkiStore.Infrastructure.Data;
 using SkiStore.Infrastructure.Data.Base.Repositories;
@@ -40,6 +41,9 @@ builder.Services.AddCors(options =>
 });
 // TODO: Use reflections to automatically initiate any service (including repositories above).
 builder.Services.AddSingleton<ICartService, CartService>();
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<AppUser>()
+                .AddEntityFrameworkStores<StoreContext>();
 
 // Configure Application middlewares (order does matter)
 var app = builder.Build();
@@ -60,4 +64,5 @@ using (var scope = app.Services.CreateScope())
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors("CorsPolicy");
 app.MapControllers();
+app.MapIdentityApi<AppUser>();
 app.Run();
