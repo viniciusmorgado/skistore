@@ -1,4 +1,3 @@
-using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Mvc;
 using SkiStore.Core.Entities;
 using SkiStore.Core.Interfaces;

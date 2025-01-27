@@ -26,7 +26,6 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(opt =>
         )
     );
 });
-
 builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => { }); });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -44,6 +43,18 @@ builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<AppUser>()
                 .AddEntityFrameworkStores<StoreContext>();
+builder.Services.Configure<CookiePolicyOptions>(options => options.MinimumSameSitePolicy = SameSiteMode.Strict);
+builder.Services.ConfigureApplicationCookie(options => 
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    options.SlidingExpiration = true;
+    options.Cookie.SecurePolicy = builder.Environment.IsProduction() 
+        ? CookieSecurePolicy.Always 
+        : CookieSecurePolicy.None;
+});
+
 
 // Configure Application middlewares (order does matter)
 var app = builder.Build();
@@ -62,7 +73,8 @@ using (var scope = app.Services.CreateScope())
     }
 }
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.MapControllers();
-app.MapIdentityApi<AppUser>();
+app.MapGroup("api").MapIdentityApi<AppUser>();
 app.Run();
