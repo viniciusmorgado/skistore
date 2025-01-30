@@ -51,10 +51,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromHours(1);
     options.SlidingExpiration = true;
     options.Cookie.SecurePolicy = builder.Environment.IsProduction() 
-        ? CookieSecurePolicy.Always 
-        : CookieSecurePolicy.None;
+            ? CookieSecurePolicy.Always 
+            : CookieSecurePolicy.None;
 });
-
 
 // Configure Application middlewares (order does matter)
 var app = builder.Build();

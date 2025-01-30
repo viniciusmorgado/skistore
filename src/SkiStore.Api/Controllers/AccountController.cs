@@ -1,5 +1,8 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SkiStore.Api.DTOs;
 using SkiStore.Core.Entities;
 using SkiStore.Core.Interfaces;
@@ -16,8 +19,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
             FirstName = registerDTO.FirstName,
             LastName = registerDTO.LastName,
             Email = registerDTO.Email,
-            UserName = registerDTO.Email,
-
+            UserName = registerDTO.Email
         };
 
         var result = await signInManager.UserManager.CreateAsync(user, registerDTO.Password);
@@ -25,5 +27,39 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Ok();
+    }
+
+    [Authorize]
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout()
+    {
+        await signInManager.SignOutAsync();
+        return NoContent();
+    }
+
+    // [Authorize]
+    [HttpGet("user-info")]
+    public async Task<ActionResult> GetUserInfo()
+    {
+        if (User.Identity?.IsAuthenticated == false) return NoContent();
+        var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
+
+        if(user == null) return Unauthorized();
+
+        return Ok(new 
+        {
+            user.FirstName,
+            user.LastName,
+            user.Email
+        }); 
+    }
+
+    [HttpGet]
+    public ActionResult GetAuthState()
+    {
+        return Ok(new 
+        {
+            IsAuthenticated = User.Identity?.IsAuthenticated ?? false
+        });
     }
 }
