@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SkiStore.Api.DTOs;
+using SkiStore.Api.Extensions;
 using SkiStore.Core.Entities;
 using SkiStore.Core.Interfaces;
 
@@ -42,9 +43,10 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     public async Task<ActionResult> GetUserInfo()
     {
         if (User.Identity?.IsAuthenticated == false) return NoContent();
-        var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
+        
+        // var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
 
-        if(user == null) return Unauthorized();
+        var user = await signInManager.UserManager.GetUserByEmail(User);
 
         return Ok(new 
         {
