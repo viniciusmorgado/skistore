@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SkiStore.Infrastructure.Data;
@@ -11,9 +12,11 @@ using SkiStore.Infrastructure.Data;
 namespace SkiStore.Infrastructure.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250203040414_AddressAdded")]
+    partial class AddressAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -186,113 +189,6 @@ namespace SkiStore.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Addresses");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            City = "New York",
-                            Country = "USA",
-                            Line1 = "123 Main St",
-                            Line2 = "Apt 4B",
-                            PostalCode = "10001",
-                            Reference = "Near Central Park",
-                            State = "NY"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            City = "Los Angeles",
-                            Country = "USA",
-                            Line1 = "456 Elm St",
-                            PostalCode = "90001",
-                            Reference = "Downtown LA",
-                            State = "CA"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Chicago",
-                            Country = "USA",
-                            Line1 = "789 Oak St",
-                            Line2 = "Suite 100",
-                            PostalCode = "60601",
-                            Reference = "Near Willis Tower",
-                            State = "IL"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            City = "Houston",
-                            Country = "USA",
-                            Line1 = "101 Pine St",
-                            PostalCode = "77001",
-                            Reference = "Near Houston Zoo",
-                            State = "TX"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            City = "Phoenix",
-                            Country = "USA",
-                            Line1 = "202 Maple St",
-                            Line2 = "Unit 5",
-                            PostalCode = "85001",
-                            Reference = "Near Phoenix Art Museum",
-                            State = "AZ"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            City = "Philadelphia",
-                            Country = "USA",
-                            Line1 = "303 Cedar St",
-                            PostalCode = "19019",
-                            Reference = "Near Liberty Bell",
-                            State = "PA"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            City = "San Antonio",
-                            Country = "USA",
-                            Line1 = "404 Birch St",
-                            Line2 = "Apt 3C",
-                            PostalCode = "78201",
-                            Reference = "Near Alamo",
-                            State = "TX"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            City = "San Diego",
-                            Country = "USA",
-                            Line1 = "505 Walnut St",
-                            PostalCode = "92101",
-                            Reference = "Near San Diego Zoo",
-                            State = "CA"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            City = "Dallas",
-                            Country = "USA",
-                            Line1 = "606 Cherry St",
-                            Line2 = "Suite 200",
-                            PostalCode = "75201",
-                            Reference = "Near Dallas World Aquarium",
-                            State = "TX"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            City = "San Jose",
-                            Country = "USA",
-                            Line1 = "707 Spruce St",
-                            PostalCode = "95101",
-                            Reference = "Near Tech Museum",
-                            State = "CA"
-                        });
                 });
 
             modelBuilder.Entity("SkiStore.Core.Entities.AppUser", b =>
