@@ -74,4 +74,12 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
             IsAuthenticated = User.Identity?.IsAuthenticated ?? false
         });
     }
+
+    [HttpPost("address")]
+    public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDTO addressDTO) 
+    {
+        var user = await signInManager.UserManager.GetUserByEmaiWithAddress(User);
+
+        return Ok();
+    }
 }
