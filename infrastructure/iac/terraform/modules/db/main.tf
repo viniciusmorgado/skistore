@@ -8,8 +8,18 @@ resource "aws_security_group" "db_sg" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = var.allowed_cidr_blocks
+    # cidr_blocks = var.allowed_cidr_blocks # <-- THIS EXPOSURE THE DB TO THE INTERNET
+    security_groups = [var.allowed_security_group_id] # Tighten access to specific SG
   }
+
+  # SECURITY NOTE FOR MY FUTURE SELF:
+  # Never expose the database to 0.0.0.0/0 (entire internet).
+  # Always restrict database access to specific application security groups.
+  # This protects against brute-force attacks, DDoS, and compliance violations.
+  # 
+  # Only trusted compute resources (like Elastic Beanstalk, ECS, EKS) should have direct DB access.
+  # 
+  # Production-grade architecture requires secure-by-default networking at all times.
 
   egress {
     from_port   = 0

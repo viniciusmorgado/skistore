@@ -24,10 +24,16 @@ variable "db_subnet_ids" {
   type        = list(string)
 }
 
-variable "allowed_cidr_blocks" {
-  description = "CIDR blocks allowed to connect to the database (for testing defaults to anywhere)."
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
+# TODO? USEFUL DURING TESTS BUT EXPOSE DB TO THE INTERNET
+# variable "allowed_cidr_blocks" {
+#   description = "CIDR blocks allowed to connect to the database (for testing defaults to anywhere)."
+#   type        = list(string)
+#   default     = ["0.0.0.0/0"]
+# }
+
+variable "allowed_security_group_id" {
+  description = "Security Group ID allowed to connect to the database (typically Elastic Beanstalk instances' SG)."
+  type        = string
 }
 
 variable "db_instance_class" {

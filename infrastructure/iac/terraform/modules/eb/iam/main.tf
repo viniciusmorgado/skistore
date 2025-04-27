@@ -1,3 +1,5 @@
+# NOTE: AWSServiceRoleForSupport and AWSServiceRoleForTrustedAdvisor are default roles in AWS, dont mess up.
+
 # IAM Policy for Elastic Beanstalk Service Role
 resource "aws_iam_policy" "eb_service_policy" {
   name        = "${var.project_name}-eb-service-policy"

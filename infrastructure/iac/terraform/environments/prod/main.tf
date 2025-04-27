@@ -12,6 +12,7 @@ module "db" {
   master_password = var.db_pass
   vpc_id          = module.vpc.vpc_id
   db_subnet_ids   = module.vpc.private_subnets
+  allowed_security_group_id = module.eb.eb_security_group_id # <-- reference to EB instance SG
 }
 
 # Elastic Beanstalk (Backend)
