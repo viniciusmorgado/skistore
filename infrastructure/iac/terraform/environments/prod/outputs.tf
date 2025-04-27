@@ -13,19 +13,6 @@ output "private_subnets" {
   value       = module.vpc.private_subnets
 }
 
-# output "eb_app_name" {
-#   value = module.eb.app_name
-# }
-
-# output "eb_env_name" {
-#   value = module.eb.environment_name
-# }
-
-# output "eb_url" {
-#   description = "URL of the EB environment"
-#   value       = module.eb.environment_endpoint
-# }
-
 output "frontend_bucket" {
   description = "Name of the S3 bucket hosting the frontend"
   value       = module.s3_cloudfront.bucket_id
@@ -34,4 +21,24 @@ output "frontend_bucket" {
 output "cdn_domain_name" {
   description = "CloudFront distribution domain name"
   value       = module.s3_cloudfront.cdn_domain_name
+}
+
+output "eb_application_name" {
+  description = "Name of the Elastic Beanstalk Application"
+  value       = module.eb.eb_application_name
+}
+
+output "eb_environment_name" {
+  description = "Name of the Elastic Beanstalk Environment"
+  value       = module.eb.eb_environment_name
+}
+
+output "alb_security_group_id" {
+  description = "Security Group ID for the Application Load Balancer"
+  value       = module.eb.alb_security_group_id
+}
+
+output "eb_security_group_id" {
+  description = "Security Group ID for the EB instances"
+  value       = module.eb.eb_security_group_id
 }
