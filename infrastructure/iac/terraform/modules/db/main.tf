@@ -35,12 +35,36 @@ resource "aws_db_subnet_group" "main" {
 
 # Aurora PostgreSQL cluster
 resource "aws_rds_cluster" "aurora" {
-  cluster_identifier      = "${var.project_name}-aurora"
-  engine                  = "aurora-postgresql"
-  master_username         = var.master_username
-  master_password         = var.master_password
-  vpc_security_group_ids  = [aws_security_group.db_sg.id]
+  cluster_identifier     = "${var.project_name}-aurora"
+  engine                 = "aurora-postgresql"
+  master_username        = var.master_username
+  master_password        = var.master_password
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
+  db_subnet_group_name   = aws_db_subnet_group.main.name
+  skip_final_snapshot    = true
+  deletion_protection    = false
+}
+
+# Writer Instance for Aurora Cluster
+resource "aws_rds_cluster_instance" "aurora_writer" {
+  identifier              = "${var.project_name}-aurora-writer"
+  cluster_identifier      = aws_rds_cluster.aurora.id
+  instance_class          = var.db_instance_class
+  engine                  = aws_rds_cluster.aurora.engine
+  engine_version          = aws_rds_cluster.aurora.engine_version
+  publicly_accessible     = false
   db_subnet_group_name    = aws_db_subnet_group.main.name
-  skip_final_snapshot     = true
-  deletion_protection     = false
+  db_parameter_group_name = null
+}
+
+# Reader Instance for Aurora Cluster (optional for HA)
+resource "aws_rds_cluster_instance" "aurora_reader" {
+  identifier              = "${var.project_name}-aurora-reader"
+  cluster_identifier      = aws_rds_cluster.aurora.id
+  instance_class          = var.db_instance_class
+  engine                  = aws_rds_cluster.aurora.engine
+  engine_version          = aws_rds_cluster.aurora.engine_version
+  publicly_accessible     = false
+  db_subnet_group_name    = aws_db_subnet_group.main.name
+  db_parameter_group_name = null
 }

@@ -29,3 +29,9 @@ variable "allowed_cidr_blocks" {
   type        = list(string)
   default     = ["0.0.0.0/0"]
 }
+
+variable "db_instance_class" {
+  description = "Instance class for the Aurora DB instances (example: db.serverless, db.r6g.large, etc.)"
+  type        = string
+  default     = "db.r6g.large"
+}
