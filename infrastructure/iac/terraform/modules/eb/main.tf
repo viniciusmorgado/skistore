@@ -56,8 +56,8 @@ resource "aws_elastic_beanstalk_application" "app" {
 
 # Elastic Beanstalk Environment (Load Balanced)
 resource "aws_elastic_beanstalk_environment" "env" {
-  name                = "${var.project_name}-env"
-  application         = aws_elastic_beanstalk_application.app.name
+  name        = "${var.project_name}-env"
+  application = aws_elastic_beanstalk_application.app.name
   # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platform-history-dotnetlinux.html
   solution_stack_name = "64bit Amazon Linux 2023 v3.4.1 running .NET 9" # Use this to update the runtime
   tier                = "WebServer"
@@ -103,7 +103,7 @@ resource "aws_elastic_beanstalk_environment" "env" {
     name      = "DB_HOST"
     value     = var.db_endpoint # Database endpoint for the app (even if unused yet)
   }
-  
+
   # Optional: Instance type setting
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -111,12 +111,14 @@ resource "aws_elastic_beanstalk_environment" "env" {
     value     = var.instance_type
   }
 
+  # EB instance profile role
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = module.eb_iam.eb_instance_profile_name
   }
 
+  # EB service role
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
@@ -125,6 +127,6 @@ resource "aws_elastic_beanstalk_environment" "env" {
 }
 
 module "eb_iam" {
-  source = "./iam"
+  source       = "./iam"
   project_name = var.project_name
 }

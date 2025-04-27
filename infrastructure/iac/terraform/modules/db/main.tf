@@ -1,4 +1,4 @@
-# Security group for the DB
+# Security group for the database
 resource "aws_security_group" "db_sg" {
   name        = "${var.project_name}-db-sg"
   description = "Allow inbound access to Aurora PostgreSQL"
@@ -23,7 +23,7 @@ resource "aws_security_group" "db_sg" {
   }
 }
 
-# Subnet group for Aurora
+# Subnet group for Aurora RDS
 resource "aws_db_subnet_group" "main" {
   name       = "${var.project_name}-db-subnet-group"
   subnet_ids = var.db_subnet_ids
@@ -57,7 +57,7 @@ resource "aws_rds_cluster_instance" "aurora_writer" {
   db_parameter_group_name = null
 }
 
-# Reader Instance for Aurora Cluster (optional for HA)
+# Reader Instance for Aurora Cluster
 resource "aws_rds_cluster_instance" "aurora_reader" {
   identifier              = "${var.project_name}-aurora-reader"
   cluster_identifier      = aws_rds_cluster.aurora.id

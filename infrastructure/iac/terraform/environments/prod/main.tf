@@ -1,8 +1,10 @@
+# AWS VPC
 module "vpc" {
   source       = "../../modules/vpc"
   project_name = var.project_name
 }
 
+# Aurora/RDS PostgreSQL-compatible database
 module "db" {
   source          = "../../modules/db"
   project_name    = var.project_name
@@ -12,15 +14,17 @@ module "db" {
   db_subnet_ids   = module.vpc.private_subnets
 }
 
+# Elastic Beanstalk (Backend)
 module "eb" {
-  source            = "../../modules/eb" # Adjust if your path differs
-  project_name      = var.project_name
-  vpc_id            = module.vpc.vpc_id
-  public_subnet_ids = module.vpc.public_subnets
+  source             = "../../modules/eb"
+  project_name       = var.project_name
+  vpc_id             = module.vpc.vpc_id
+  public_subnet_ids  = module.vpc.public_subnets
   private_subnet_ids = module.vpc.private_subnets
-  db_endpoint       = module.db.db_cluster_endpoint
+  db_endpoint        = module.db.db_cluster_endpoint
 }
 
+# S3 + Cloudfront (Frontend)
 module "s3_cloudfront" {
   source       = "../../modules/s3_cloudfront"
   project_name = var.project_name
