@@ -1,88 +1,146 @@
-# Ski Store API
-API for Ski Store project
+# Ski Store Monorepo
 
-## Development Setup Requirements
-- .NET 8 SDK
-- Docker Desktop
-- Git
-- AWS CLI (for cloud deploy only)
+Monorepo for the SkiStore ecommerce application
 
-## Getting Started
+High level directory structure:
 
-1. Clone the repository
-```bash
-git clone https://github.com/viniciusmorgado/skistore-api.git
-```
+- client/ - Angular frontend application
+- server/ - C# .NET Backend Application
+- infrastructure - DevOps and infra files (Terraform/AWS, Docker, Apache Airflow DAGs)
 
-2. Create a `.env` file in the root directory with these variables:
-```
-POSTGRES_USER=your_username
-POSTGRES_PASSWORD=your_password
-```
-Note: Choose any username/password for development, but remember to update `appsettings.Development.json` with the same credentials.
+## Development Requirements
 
-3. Start the PostgreSQL container:
-```bash
-docker-compose up -d
-```
+- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Git](https://git-scm.com/)
 
-4. Run the API:
-```bash
-dotnet restore
-dotnet run
-```
+## Production Requirements
+
+- [AWS CLI](https://aws.amazon.com/cli/) (for cloud deployments)
+- Docker (for on-premise deployments)
+
+## Getting Started (Development)
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/viniciusmorgado/skistore-api.git
+   ```
+
+2. **Create a development settings file**:
+
+   In `server/skistore-api/src/SkiStore.Api`, create a file named `appsettings.Development.json` using `appsettings.json` as a template:
+
+   ```json
+   {
+     "Kestrel": {
+       "Endpoints": {
+         "Http": {
+           "Url": "localhost:5001"
+         }
+       }
+     },
+     "Logging": {
+       "LogLevel": {
+         "Default": "Information",
+         "Microsoft.AspNetCore": "Information"
+       }
+     },
+     "ConnectionStrings": {
+       "DefaultConnection": "REPLACE_WITH_POSTGRES_CONNECTION_STRING",
+       "Redis": "REPLACE_WITH_REDIS_ENDPOINT"
+     },
+     "CorsSettings": {
+       "AllowedOrigins": [
+         "http://localhost:5001"
+       ]
+     },
+     "StripeSettings": {
+       "PublicKey": "REPLACE_WITH_STRIPE_PUBLISHABLE_KEY",
+       "PrivateKey": "REPLACE_WITH_STRIPE_SECRET_KEY"
+     }
+   }
+   ```
+
+   > **Note:** `appsettings.Development.json` is excluded from version control.
+
+3. **Create a `.env` file**:
+
+   Inside `infrastructure/containers/docker`, create a `.env` file:
+
+   ```bash
+   POSTGRES_USER=your_username
+   POSTGRES_PASSWORD=your_password
+   ```
+
+   > **Reminder:** Use the same credentials in your `appsettings.Development.json`.
+
+4. **Start Docker containers**:
+
+   Navigate to `infrastructure/containers/docker` and run:
+
+   ```bash
+   docker-compose up -d
+   ```
+
+5. **Run the API**:
+
+   ```bash
+   dotnet restore
+   dotnet run
+   ```
 
 ## Database Configuration
 
-The PostgreSQL container runs with these specifications:
-- CPU: 1 core (minimum 0.5)
-- Memory: 1GB (minimum 512MB)
-- Port: 5432 (default)
+**PostgreSQL**:
+- CPU: 1 core (min 0.5)
+- Memory: 1 GB (min 512 MB)
+- Port: 5432
+
+**Redis**:
+- CPU: 0.5 core
+- Memory: 256 MB
+- Port: 6379
 
 These resources are sufficient for local development.
 
 ## Infrastructure
 
-### On-promise with Docker Container
-
-### On-promise without Docker Container
-
 ### AWS with Elastic Beanstalk and Terraform
 
-We use Terraform to create a managed instance of elastic beanstalk in AWS, you need to setup the Terraform CLI first regardless if you are deployment the infrastructure via a pipeline, or if you are testing it direct on your machine.
+We use Terraform to manage AWS Elastic Beanstalk infrastructure.
 
-The terraform.tfstate saves the state of the infrastructure it is essentialy for the continues update of the infrastructure, but because contains confidential information is never commited on the repository, instead we normally save into a bucket, because we are using AWS for this project the bucket will be the S3. To not attache the bucket for the state with the creation of the rest of the infrastructure create the bucket by hand using aws cli:
+**Important:** Terraform state (`terraform.tfstate`) is sensitive and not committed to Git. It is stored in an S3 bucket.
 
-´´´
+**Create the S3 bucket manually:**
+
+```bash
 aws s3api create-bucket \
   --bucket skistore-state-bucket \
   --region us-east-2 \
   --create-bucket-configuration LocationConstraint=us-east-2
-´´´
+```
 
-On Windows (remove the break lines):
+**On Windows (no line breaks):**
 
-´´´
+```bash
 aws s3api create-bucket --bucket skistore-state-bucket --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
-´´´
+```
 
-Before we go with the infrastructure, let's create the secrets manager:
+**Apply Infrastructure:**
 
+Inside `infrastructure/iac/terraform/environments/prod`, run:
 
-
-Then inside of infrastructure/iac/terraform/environments/prod:
-
-To apply the entire infrastructure:
-
+```bash
 terraform init
 terraform plan
 terraform apply -auto-approve
+```
 
-To apply a single module using Terraform:
+**Apply Specific Module:**
 
+```bash
 terraform init
-terraform plan "-target=module.vpc"
-terraform apply "-target=module.vpc" -auto-approve
-
-
-#### USE appsettings.json as template to fill the necessary information to run this project
+terraform plan -target=module.vpc
+terraform apply -target=module.vpc -auto-approve
+```
