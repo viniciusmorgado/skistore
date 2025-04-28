@@ -1,3 +1,5 @@
+name: skistore
+
 services:
   postgres:
     container_name: skistore-database

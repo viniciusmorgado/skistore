@@ -6,6 +6,9 @@
 *.tfstate
 *.lock.info
 
+# C#
+appsettings.Development.json
+
 # User-specific files
 *.rsuser
 *.suo

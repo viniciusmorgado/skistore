@@ -8,7 +8,7 @@ public class AddressMap : IEntityTypeConfiguration<Address>
 {
     public void Configure(EntityTypeBuilder<Address> builder)
     {
-        #if DEBUG
+#if DEBUG
         builder.HasData(
             new Address
             {
@@ -121,6 +121,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 Line2 = null
             }
         );
-        #endif
+#endif
     }
 }
