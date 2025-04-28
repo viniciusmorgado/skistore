@@ -1,6 +1,18 @@
 Regardless of the option you need below, first you need to use AWS CLI to create the Terraform State Bucket:
 
+aws s3api create-bucket --bucket skistore-state-bucket --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
 
+Or for a encrypted bucket:
+
+aws s3api put-bucket-encryption --bucket skistore-state-bucket --server-side-encryption-configuration '{
+  "Rules": [
+    {
+      "ApplyServerSideEncryptionByDefault": {
+        "SSEAlgorithm": "AES256"
+      }
+    }
+  ]
+}'
 
 1. If you ALREADY have an applied infrastructure, and now you're ADDING DynamoDB Lock Table:
 
