@@ -1,0 +1,31 @@
+Regardless of the option you need below, first you need to use AWS CLI to create the Terraform State Bucket:
+
+
+
+1. If you ALREADY have an applied infrastructure, and now you're ADDING DynamoDB Lock Table:
+
+Reconfigure backend to know it must lock with DynamoDB:
+terraform init -reconfigure
+
+Create ONLY the lock table (no locking possible yet):
+terraform apply -lock=false "-target=aws_dynamodb_table.terraform_locks"
+
+Now DynamoDB exists — normal locking works:
+terraform plan
+
+Normal operations with lock protection from now on:
+terraform apply
+
+2. If you are STARTING a brand new infrastructure from scratch, and it ALREADY includes backend + DynamoDB lock in code:
+
+Initialize backend (backend expects S3 + DynamoDB lock):
+terraform init
+
+Create only the DynamoDB table first without locking:
+terraform apply -lock=false "-target=aws_dynamodb_table.terraform_locks"
+
+Locking now works because table exists:
+terraform plan
+
+Normal apply with full lock protection:
+terraform apply

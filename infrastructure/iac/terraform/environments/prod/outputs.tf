@@ -42,3 +42,8 @@ output "eb_security_group_id" {
   description = "Security Group ID for the EB instances"
   value       = module.eb.eb_security_group_id
 }
+
+output "terraform_lock_table_name" {
+  description = "Name of the DynamoDB lock table for Terraform state locking."
+  value       = aws_dynamodb_table.terraform_locks.name
+}
