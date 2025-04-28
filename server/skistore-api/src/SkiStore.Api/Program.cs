@@ -17,26 +17,33 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 {
     opt.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-builder.Services.AddSingleton<IConnectionMultiplexer>(opt =>
-{
-    return ConnectionMultiplexer.Connect(
-        ConfigurationOptions.Parse(
-            builder.Configuration.GetConnectionString("Redis"), true
-        )
-    );
-});
+builder.Services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplexer.Connect(
+    ConfigurationOptions.Parse(
+        builder.Configuration.GetConnectionString("Redis")!, true
+    )
+));
 builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => { }); });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+var origins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+
+if (origins == null || origins.Length == 0)
+{
+    throw new InvalidOperationException("AllowedOrigins must be configured.");
+}
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
         policy.AllowAnyHeader()
               .AllowAnyMethod()
-              .WithOrigins(builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>());
+              .AllowCredentials()
+              .WithOrigins(origins);
     });
 });
+
 // TODO: Use reflections to automatically initiate any service (including repositories above).
 builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddAuthorization();

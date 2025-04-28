@@ -1,12 +1,9 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SkiStore.Api.DTOs;
 using SkiStore.Api.Extensions;
 using SkiStore.Core.Entities;
-using SkiStore.Core.Interfaces;
 
 namespace SkiStore.Api.Controllers;
 
@@ -56,13 +53,14 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         
         // var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
 
-        var user = await signInManager.UserManager.GetUserByEmail(User);
+        var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
 
         return Ok(new 
         {
             user.FirstName,
             user.LastName,
-            user.Email
+            user.Email,
+            Address = user.Address.ToDto()
         }); 
     }
 
@@ -76,10 +74,23 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     }
 
     [HttpPost("address")]
-    public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDTO addressDTO) 
+    public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDTO addressDto) 
     {
-        var user = await signInManager.UserManager.GetUserByEmaiWithAddress(User);
+        var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
+        
+        if (user.Address == null)
+        {
+            user.Address = addressDto.ToEntity();
+        }
+        else
+        {
+            user.Address.UpdateFromDto(addressDto);
+        }
+        
+        var result = await signInManager.UserManager.UpdateAsync(user);
 
-        return Ok();
+        if (!result.Succeeded) return BadRequest("Problem updating user address");
+        
+        return Ok(user.Address.ToDto());
     }
 }
