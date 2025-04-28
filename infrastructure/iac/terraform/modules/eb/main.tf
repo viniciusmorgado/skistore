@@ -54,12 +54,18 @@ resource "aws_elastic_beanstalk_application" "app" {
   description = "Elastic Beanstalk Application for ${var.project_name}"
 }
 
+# EB IAM Policy
+module "eb_iam" {
+  source       = "./iam"
+  project_name = var.project_name
+}
+
 # Elastic Beanstalk Environment (Load Balanced)
 resource "aws_elastic_beanstalk_environment" "env" {
   name        = "${var.project_name}-env"
   application = aws_elastic_beanstalk_application.app.name
   # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platform-history-dotnetlinux.html
-  solution_stack_name = "64bit Amazon Linux 2023 v3.4.1 running .NET 9" # Use this to update the runtime
+  solution_stack_name = "64bit Amazon Linux 2023 v3.4.1 running .NET 9" # Use this to update the runtime, reference in the link above.
   tier                = "WebServer"
 
   setting {
@@ -124,9 +130,68 @@ resource "aws_elastic_beanstalk_environment" "env" {
     name      = "ServiceRole"
     value     = module.eb_iam.eb_service_role_name
   }
-}
 
-module "eb_iam" {
-  source       = "./iam"
-  project_name = var.project_name
+  ############################################
+  ### Automatic Scalability Configurations ###
+  ############################################
+
+  # Optional: Minimum number of instances to keep running
+  setting {
+    namespace = "aws:autoscaling:asg"
+    name      = "MinSize"
+    value     = "2"
+  }
+
+  # Optional: Maximum number of instances allowed during scaling
+  setting {
+    namespace = "aws:autoscaling:asg"
+    name      = "MaxSize"
+    value     = "5"
+  }
+
+  # Optional: Metric to trigger scaling (CPU utilization)
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "MeasureName"
+    value     = "CPUUtilization"
+  }
+
+  # Optional: Upper CPU threshold (scale up when CPU > 70%)
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "UpperThreshold"
+    value     = "70"
+  }
+
+  # Optional: Lower CPU threshold (scale down when CPU < 30%)
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "LowerThreshold"
+    value     = "30"
+  }
+
+  # Optional: Statistic type used (Average CPU utilization)
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "Statistic"
+    value     = "Average"
+  }
+
+  # Optional: Evaluation periods (number of consecutive periods before scaling action)
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "EvaluationPeriods"
+    value     = "2"
+  }
+
+  # Optional: Cooldown periods between scaling actions (seconds)
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "BreachDuration"
+    value     = "120"
+  }
+
+  ###################################################
+  ### End of Automatic Scalability Configuration  ###
+  ###################################################
 }
