@@ -83,3 +83,6 @@ To apply a single module using Terraform:
 terraform init
 terraform plan "-target=module.vpc"
 terraform apply "-target=module.vpc" -auto-approve
+
+
+#### USE appsettings.json as template to fill the necessary information to run this project

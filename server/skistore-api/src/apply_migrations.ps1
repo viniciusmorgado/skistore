@@ -1,0 +1,1 @@
+dotnet ef migrations add DeliveryMethodsAdded -p .\SkiStore.Infrastructure\ -s .\SkiStore.Api\

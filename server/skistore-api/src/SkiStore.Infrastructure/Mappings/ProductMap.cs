@@ -9,8 +9,7 @@ public class ProductMap : IEntityTypeConfiguration<Product>
     public void Configure(EntityTypeBuilder<Product> builder)
     {
         builder.Property(x => x.Price).HasColumnType("decimal(18,2)");
-
-        #if DEBUG
+#if DEBUG
         builder.HasData(
             new Product
             {
@@ -211,6 +210,6 @@ public class ProductMap : IEntityTypeConfiguration<Product>
                 QuantityInStock = 27
             }
         );
-        #endif
+#endif
     }
 }

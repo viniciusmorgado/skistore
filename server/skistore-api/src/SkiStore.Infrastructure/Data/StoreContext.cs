@@ -8,6 +8,7 @@ public class StoreContext(DbContextOptions options) : IdentityDbContext<AppUser>
 {
     public DbSet<Product> Products { get; init; }
     public DbSet<Address> Addresses { get; set; }
+    public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
