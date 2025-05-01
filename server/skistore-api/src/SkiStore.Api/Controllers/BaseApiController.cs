@@ -9,7 +9,9 @@ namespace SkiStore.Api.Controllers;
 [Route("api/[controller]")]
 public class BaseApiController : ControllerBase
 {
-    protected async Task<ActionResult> CreatedPagedResult<T>(IGenericRepository<T> repository, ISpecification<T> specification, int pageIndex, int pageSize) where T : BaseEntity
+    protected async Task<ActionResult> CreatedPagedResult<T>( IGenericRepository<T> repository
+                                                            , ISpecification<T> specification
+                                                            , int pageIndex, int pageSize ) where T : BaseEntity
     {
         return Ok(new
             Pagination<T>(

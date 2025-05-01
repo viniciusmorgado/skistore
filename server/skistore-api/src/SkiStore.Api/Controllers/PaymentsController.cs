@@ -7,20 +7,20 @@ using SkiStore.Core.Interfaces;
 namespace SkiStore.Api.Controllers;
 
 public class PaymentsController( IPaymentService service
-                               , IGenericRepository<DeliveryMethod> deliveryMethodRepository) : BaseApiController
+                               , IUnitOfWork worker ) : BaseApiController
+//public class PaymentsController( IPaymentService service
+//                               , IGenericRepository<DeliveryMethod> deliveryMethodRepository ) : BaseApiController
 {
     [Authorize]
     [HttpPost("{cardId}")]
     public async Task<ActionResult<ShoppingCart>> CreateOrUpdatePaymentIntent(string cardId)
     {
-        var cart = await service.CreateOrUpdatePaymentIntent(cardId);
-        if (cart == null) return BadRequest("Problem with your cart");
-        return Ok(cart);
-    } 
+        return Ok(await service.CreateOrUpdatePaymentIntent(cardId));
+    }
 
     [HttpGet("delivery-methods")]
     public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods()
     {
-        return Ok(await deliveryMethodRepository.GetAllAsync());
+        return Ok(await worker.Repository<DeliveryMethod>().GetAllAsync());
     }
 }

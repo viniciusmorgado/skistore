@@ -10,7 +10,7 @@ public class CartController(ICartService service) : BaseApiController
     public async Task<ActionResult<ShoppingCart>> GetCartById(string id)
     {
         return Ok(
-            await service.GetCartAsync(id) ?? new ShoppingCart{Id = id}
+            await service.GetCartAsync(id) ?? new ShoppingCart{ Id = id }
         );
     }
 

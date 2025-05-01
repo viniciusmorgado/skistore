@@ -26,6 +26,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplex
 ));
 builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => { }); });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddCors(options =>
 {

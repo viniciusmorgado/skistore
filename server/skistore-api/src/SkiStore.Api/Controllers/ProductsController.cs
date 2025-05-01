@@ -1,18 +1,19 @@
 #nullable enable
 using Microsoft.AspNetCore.Mvc;
-using SkiStore.Core.Base.Interfaces;
 using SkiStore.Core.Entities;
+using SkiStore.Core.Interfaces;
 using SkiStore.Core.Specs;
 
 namespace SkiStore.Api.Controllers;
 
-public class ProductsController(IGenericRepository<Product> repository) : BaseApiController
+public class ProductsController(IUnitOfWork worker) : BaseApiController
+//public class ProductsController(IGenericRepository<Product> repository) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Product>>> Get([FromQuery] ProductSpecParams specParams)
     {
         return await CreatedPagedResult(
-            repository, 
+            worker.Repository<Product>(), 
             new ProductSpec(specParams),
             specParams.PageIndex,
             specParams.PageSize
@@ -22,7 +23,7 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetById(int id)
     {
-        var product = await repository.GetByIdAsync(id);
+        var product = await worker.Repository<Product>().GetByIdAsync(id);
 
         // TODO: Move this to a validator class.
         if (!IsProductFound(product)) return NotFound();
@@ -35,7 +36,7 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     {
         if (!IsProductValid(product)) return BadRequest();
         
-        repository.Post(product);
+        worker.Repository<Product>().Post(product);
 
         if (!await IsSaveSuccessful()) return BadRequest();
         
@@ -50,7 +51,7 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
         if (!IsIdMatchingProduct(id, product)) return BadRequest("Id do not match the product");
         
         product.Id = id;
-        repository.Put(product);
+        worker.Repository<Product>().Put(product);
         
         if (!await IsSaveSuccessful()) return BadRequest("Product do not successfully saved");
         
@@ -60,12 +61,12 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     [HttpDelete("{id:int}")]
     public async Task<ActionResult> Delete(int id)
     {
-        var product = await repository.GetByIdAsync(id);
+        var product = await worker.Repository<Product>().GetByIdAsync(id);
         
         // TODO: Move this to a validator class.
         if (!IsProductFound(product)) return NotFound();
         
-        repository.Delete(product);
+        worker.Repository<Product>().Delete(product);
         
         if (!await IsSaveSuccessful()) return BadRequest();
         
@@ -75,13 +76,13 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
     [HttpGet("brands")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
     {
-        return Ok(await repository.GetAllWithSpec(new BrandSpec()));
+        return Ok(await worker.Repository<Product>().GetAllWithSpec(new BrandSpec()));
     }
 
     [HttpGet("types")]
     public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
     {
-        return Ok(await repository.GetAllWithSpec(new TypeSpec()));
+        return Ok(await worker.Repository<Product>().GetAllWithSpec(new TypeSpec()));
     }
 
     // Validation Methods
@@ -92,7 +93,7 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
 
     private bool IsProductExisting(int id)
     {
-        return repository.Exists(id);
+        return worker.Repository<Product>().Exists(id);
     }
 
     private static bool IsProductValid(Product product)
@@ -113,6 +114,6 @@ public class ProductsController(IGenericRepository<Product> repository) : BaseAp
 
     private async Task<bool> IsSaveSuccessful()
     {
-        return await repository.SaveChangesAsync();
+        return await worker.Repository<Product>().SaveChangesAsync();
     }
 }
