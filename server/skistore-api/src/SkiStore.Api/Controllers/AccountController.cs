@@ -10,19 +10,17 @@ namespace SkiStore.Api.Controllers;
 public class AccountController(SignInManager<AppUser> signInManager) : BaseApiController
 {
     [HttpPost("register")]
-    public async Task<ActionResult> Register(RegisterDTO registerDTO) 
+    public async Task<ActionResult> Register(RegisterDTO registerDto)
     {
         var user = new AppUser
         {
-            FirstName = registerDTO.FirstName,
-            LastName = registerDTO.LastName,
-            Email = registerDTO.Email,
-            UserName = registerDTO.Email
+            FirstName = registerDto.FirstName,
+            LastName = registerDto.LastName,
+            Email = registerDto.Email,
+            UserName = registerDto.Email
         };
 
-        var result = await signInManager.UserManager.CreateAsync(user, registerDTO.Password);
-
-        // if (!result.Succeeded) return BadRequest(result.Errors);
+        var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password);
 
         if (!result.Succeeded)
         {
@@ -50,34 +48,32 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     public async Task<ActionResult> GetUserInfo()
     {
         if (User.Identity?.IsAuthenticated == false) return NoContent();
-        
-        // var user = await signInManager.UserManager.Users.FirstOrDefaultAsync(x => x.Email == User.FindFirstValue(ClaimTypes.Email));
 
         var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
 
-        return Ok(new 
+        return Ok(new
         {
             user.FirstName,
             user.LastName,
             user.Email,
             Address = user.Address.ToDto()
-        }); 
+        });
     }
 
     [HttpGet]
     public ActionResult GetAuthState()
     {
-        return Ok(new 
+        return Ok(new
         {
             IsAuthenticated = User.Identity?.IsAuthenticated ?? false
         });
     }
 
     [HttpPost("address")]
-    public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDTO addressDto) 
+    public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDto addressDto)
     {
         var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
-        
+
         if (user.Address == null)
         {
             user.Address = addressDto.ToEntity();
@@ -86,11 +82,11 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
         {
             user.Address.UpdateFromDto(addressDto);
         }
-        
+
         var result = await signInManager.UserManager.UpdateAsync(user);
 
         if (!result.Succeeded) return BadRequest("Problem updating user address");
-        
+
         return Ok(user.Address.ToDto());
     }
 }

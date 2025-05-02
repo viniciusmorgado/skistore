@@ -5,12 +5,12 @@ namespace SkiStore.Api.Extensions;
 
 public static class AddressMappingExtensions
 {
-    public static AddressDTO ToDto(this Address address)
+    public static AddressDto ToDto(this Address address)
     {
         // if (address == null) return null;
         ArgumentNullException.ThrowIfNull(address);
 
-        return new AddressDTO
+        return new AddressDto
         {
             Line1 = address.Line1,
             Line2 = address.Line2,
@@ -18,11 +18,10 @@ public static class AddressMappingExtensions
             State = address.State,
             Country = address.Country,
             PostalCode = address.PostalCode,
-            Reference = address.Reference
         };
     }
 
-    public static Address ToEntity(this AddressDTO addressDto)
+    public static Address ToEntity(this AddressDto addressDto)
     {
         ArgumentNullException.ThrowIfNull(addressDto);
 
@@ -34,11 +33,10 @@ public static class AddressMappingExtensions
             State = addressDto.State,
             Country = addressDto.Country,
             PostalCode = addressDto.PostalCode,
-            Reference = addressDto.Reference
         };
     }
 
-    public static void UpdateFromDto(this Address address, AddressDTO addressDto)
+    public static void UpdateFromDto(this Address address, AddressDto addressDto)
     {
         ArgumentNullException.ThrowIfNull(addressDto);
         ArgumentNullException.ThrowIfNull(address);
@@ -49,6 +47,5 @@ public static class AddressMappingExtensions
         address.State = addressDto.State;
         address.Country = addressDto.Country;
         address.PostalCode = addressDto.PostalCode;
-        address.Reference = addressDto.Reference;
     }
 }

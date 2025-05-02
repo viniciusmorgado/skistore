@@ -5,7 +5,7 @@ using SkiStore.Core.Base.Entities;
 
 namespace SkiStore.Api.DTOs;
 
-public class AddressDTO
+public class AddressDto
 {
     [Required]
     public string City { get; set; }
@@ -13,7 +13,6 @@ public class AddressDTO
     public string State { get; set; }
     [Required]
     public string Country { get; set; }
-    public string Reference { get; set; }
     [Required]
     public string PostalCode { get; set; }
     [Required]

@@ -11,6 +11,8 @@ using StackExchange.Redis;
 
 // Configure Services that Start with the Application (order don't matter)
 var builder = WebApplication.CreateBuilder(args);
+var origins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
+if (origins == null || origins.Length == 0) throw new InvalidOperationException("AllowedOrigins must be configured.");
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<StoreContext>(opt =>
@@ -24,15 +26,8 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(opt => ConnectionMultiplex
 ));
 builder.WebHost.ConfigureKestrel(options => { options.ConfigureEndpointDefaults(defaults => { }); });
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-var origins = builder.Configuration.GetSection("CorsSettings:AllowedOrigins").Get<string[]>();
-
-if (origins == null || origins.Length == 0)
-{
-    throw new InvalidOperationException("AllowedOrigins must be configured.");
-}
-
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
@@ -43,7 +38,6 @@ builder.Services.AddCors(options =>
               .WithOrigins(origins);
     });
 });
-
 // TODO: Use reflections to automatically initiate any service (including repositories above).
 builder.Services.AddSingleton<ICartService, CartService>();
 builder.Services.AddAuthorization();
@@ -60,6 +54,7 @@ builder.Services.ConfigureApplicationCookie(options =>
             ? CookieSecurePolicy.Always 
             : CookieSecurePolicy.None;
 });
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 // Configure Application middlewares (order does matter)
 var app = builder.Build();

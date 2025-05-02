@@ -10,14 +10,14 @@ public class CartController(ICartService service) : BaseApiController
     public async Task<ActionResult<ShoppingCart>> GetCartById(string id)
     {
         return Ok(
-            await service.GetCartAsync(id) ?? new ShoppingCart{Id = id}
+            await service.GetCartAsync(id) ?? new ShoppingCart{ Id = id }
         );
     }
 
     [HttpPost]
     public async Task<ActionResult<ShoppingCart>> UpdateCart(ShoppingCart cart)
     {
-        return await service.SeCartAsync(cart);
+        return await service.SetCartAsync(cart);
     }
 
     [HttpDelete]

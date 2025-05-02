@@ -1,0 +1,54 @@
+pr:
+  branches:
+    include:
+      - infra
+  autoCancel: true
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+jobs:
+  - job: UpdateInfrastructureServices
+    displayName: 'Updating Redis, RabbitMQ, and Postgres containers'
+    condition: eq(variables['System.PullRequest.SourceBranch'], 'refs/heads/develop')
+    steps:
+      - task: Bash@3
+        displayName: 'Deploying infrastructure services via SSH'
+        inputs:
+          targetType: 'inline'
+          script: |
+            sshpass -p "$serverPassword" ssh -o StrictHostKeyChecking=no "$serverUser@$serverIP" << EOF
+              set -e
+
+              echo "Stopping infrastructure containers (if running)..."
+              docker stop redis || true
+              docker stop rabbitmq || true
+              docker stop postgres || true
+
+              echo "Removing containers (keeping volumes)..."
+              docker rm redis || true
+              docker rm rabbitmq || true
+              docker rm postgres || true
+
+              echo "Recreating Redis container..."
+              docker run -d \
+                --name redis \
+                --network "$projectName" \
+                "$redisImage"
+
+              echo "Recreating RabbitMQ container..."
+              docker run -d \
+                --name rabbitmq \
+                --network "$projectName" \
+                -p 5672:5672 -p 15672:15672 \
+                "$rabbitmqImage"
+
+              echo "Recreating PostgreSQL container..."
+              docker run -d \
+                --name postgres \
+                --network "$projectName" \
+                -e POSTGRES_PASSWORD="$postgresPassword" \
+                -v pgdata:/var/lib/postgresql/data \
+                -p 5432:5432 \
+                "$postgresImage"
+            EOF

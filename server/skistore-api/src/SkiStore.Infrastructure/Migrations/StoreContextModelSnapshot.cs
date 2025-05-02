@@ -154,6 +154,64 @@ namespace SkiStore.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("SkiStore.Core.Aggregates.Order.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BuyerEmail")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("DeliveryMethodId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("OrderStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("SubTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryMethodId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("SkiStore.Core.Aggregates.Order.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderItems");
+                });
+
             modelBuilder.Entity("SkiStore.Core.Entities.Address", b =>
                 {
                     b.Property<int>("Id")
@@ -177,9 +235,6 @@ namespace SkiStore.Infrastructure.Migrations
                     b.Property<string>("PostalCode")
                         .HasColumnType("text");
 
-                    b.Property<string>("Reference")
-                        .HasColumnType("text");
-
                     b.Property<string>("State")
                         .HasColumnType("text");
 
@@ -196,7 +251,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Line1 = "123 Main St",
                             Line2 = "Apt 4B",
                             PostalCode = "10001",
-                            Reference = "Near Central Park",
                             State = "NY"
                         },
                         new
@@ -206,7 +260,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Country = "USA",
                             Line1 = "456 Elm St",
                             PostalCode = "90001",
-                            Reference = "Downtown LA",
                             State = "CA"
                         },
                         new
@@ -217,7 +270,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Line1 = "789 Oak St",
                             Line2 = "Suite 100",
                             PostalCode = "60601",
-                            Reference = "Near Willis Tower",
                             State = "IL"
                         },
                         new
@@ -227,7 +279,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Country = "USA",
                             Line1 = "101 Pine St",
                             PostalCode = "77001",
-                            Reference = "Near Houston Zoo",
                             State = "TX"
                         },
                         new
@@ -238,7 +289,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Line1 = "202 Maple St",
                             Line2 = "Unit 5",
                             PostalCode = "85001",
-                            Reference = "Near Phoenix Art Museum",
                             State = "AZ"
                         },
                         new
@@ -248,7 +298,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Country = "USA",
                             Line1 = "303 Cedar St",
                             PostalCode = "19019",
-                            Reference = "Near Liberty Bell",
                             State = "PA"
                         },
                         new
@@ -259,7 +308,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Line1 = "404 Birch St",
                             Line2 = "Apt 3C",
                             PostalCode = "78201",
-                            Reference = "Near Alamo",
                             State = "TX"
                         },
                         new
@@ -269,7 +317,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Country = "USA",
                             Line1 = "505 Walnut St",
                             PostalCode = "92101",
-                            Reference = "Near San Diego Zoo",
                             State = "CA"
                         },
                         new
@@ -280,7 +327,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Line1 = "606 Cherry St",
                             Line2 = "Suite 200",
                             PostalCode = "75201",
-                            Reference = "Near Dallas World Aquarium",
                             State = "TX"
                         },
                         new
@@ -290,7 +336,6 @@ namespace SkiStore.Infrastructure.Migrations
                             Country = "USA",
                             Line1 = "707 Spruce St",
                             PostalCode = "95101",
-                            Reference = "Near Tech Museum",
                             State = "CA"
                         });
                 });
@@ -722,6 +767,120 @@ namespace SkiStore.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SkiStore.Core.Aggregates.Order.Order", b =>
+                {
+                    b.HasOne("SkiStore.Core.Entities.DeliveryMethod", "DeliveryMethod")
+                        .WithMany()
+                        .HasForeignKey("DeliveryMethodId");
+
+                    b.OwnsOne("SkiStore.Core.Aggregates.Order.PaymentSummary", "PaymentSummary", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("Brand")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int>("ExpMonth")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("ExpYear")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("Last4")
+                                .HasColumnType("integer");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.OwnsOne("SkiStore.Core.Aggregates.Order.ShippingAddress", "ShippingAddress", b1 =>
+                        {
+                            b1.Property<int>("OrderId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Line1")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Line2")
+                                .HasColumnType("text");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("PostalCode")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("OrderId");
+
+                            b1.ToTable("Orders");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderId");
+                        });
+
+                    b.Navigation("DeliveryMethod");
+
+                    b.Navigation("PaymentSummary");
+
+                    b.Navigation("ShippingAddress");
+                });
+
+            modelBuilder.Entity("SkiStore.Core.Aggregates.Order.OrderItem", b =>
+                {
+                    b.HasOne("SkiStore.Core.Aggregates.Order.Order", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.OwnsOne("SkiStore.Core.Aggregates.Order.ProductItemOrdered", "ItemOrdered", b1 =>
+                        {
+                            b1.Property<int>("OrderItemId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("PictureUrl")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.Property<int>("ProductId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("ProductName")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("OrderItemId");
+
+                            b1.ToTable("OrderItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrderItemId");
+                        });
+
+                    b.Navigation("ItemOrdered")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SkiStore.Core.Entities.AppUser", b =>
                 {
                     b.HasOne("SkiStore.Core.Entities.Address", "Address")
@@ -729,6 +888,11 @@ namespace SkiStore.Infrastructure.Migrations
                         .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
+                });
+
+            modelBuilder.Entity("SkiStore.Core.Aggregates.Order.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }
