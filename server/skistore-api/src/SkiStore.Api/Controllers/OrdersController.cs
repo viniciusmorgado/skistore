@@ -18,7 +18,7 @@ public class OrdersController(ICartService cartService, IUnitOfWork worker) : Ba
         var email = User.GetEmail();
         var cart = await cartService.GetCartAsync(createOrderDto.CartId);
 
-        if (cart == null) return BadRequest("FUCK YOU");
+        if (cart == null) return BadRequest("Order can't be created.");
 
         var items = new List<OrderItem>();
 
@@ -61,21 +61,19 @@ public class OrdersController(ICartService cartService, IUnitOfWork worker) : Ba
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<Order>>> GetOrdersForUser(int id)
+    public async Task<ActionResult<IReadOnlyList<OrderDto>>> GetOrdersForUser(int id)
     {
         var spec = new OrderSpec(User.GetEmail());
         var orders = await worker.Repository<Order>().GetAllWithSpec(spec);
-        return Ok(orders);
+        var ordersToReturn = orders.Select(o => o.ToDto()).ToList();
+        return Ok(ordersToReturn);
     }
-    
-    
+
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Product>> GetOrderById(int id)
+    public async Task<ActionResult<OrderDto>> GetOrderById(int id)
     {
-        // var product = await worker.Repository<Order>().GetByIdAsync(id);
         var spec = new OrderSpec(User.GetEmail(), id);
-        var order = await worker.Repository<Order>().GetEntityWithSpec(spec);
-        
-        return Ok(order);
+        var order = await worker.Repository<Order>().GetEntityWithSpec(spec);        
+        return order.ToDto();
     }
 }
