@@ -70,7 +70,7 @@ public class PaymentService(IConfiguration configuration
             intent = await service.UpdateAsync(cart.PaymentIntentId, options);
         }
 
-        await cartService.SeCartAsync(cart);
+        await cartService.SetCartAsync(cart);
         return cart;
     }
 }

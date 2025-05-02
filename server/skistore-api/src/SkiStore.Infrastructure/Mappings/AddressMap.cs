@@ -16,7 +16,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "New York",
                 State = "NY",
                 Country = "USA",
-                Reference = "Near Central Park",
                 PostalCode = "10001",
                 Line1 = "123 Main St",
                 Line2 = "Apt 4B"
@@ -27,7 +26,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "Los Angeles",
                 State = "CA",
                 Country = "USA",
-                Reference = "Downtown LA",
                 PostalCode = "90001",
                 Line1 = "456 Elm St",
                 Line2 = null
@@ -38,7 +36,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "Chicago",
                 State = "IL",
                 Country = "USA",
-                Reference = "Near Willis Tower",
                 PostalCode = "60601",
                 Line1 = "789 Oak St",
                 Line2 = "Suite 100"
@@ -49,7 +46,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "Houston",
                 State = "TX",
                 Country = "USA",
-                Reference = "Near Houston Zoo",
                 PostalCode = "77001",
                 Line1 = "101 Pine St",
                 Line2 = null
@@ -60,7 +56,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "Phoenix",
                 State = "AZ",
                 Country = "USA",
-                Reference = "Near Phoenix Art Museum",
                 PostalCode = "85001",
                 Line1 = "202 Maple St",
                 Line2 = "Unit 5"
@@ -71,7 +66,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "Philadelphia",
                 State = "PA",
                 Country = "USA",
-                Reference = "Near Liberty Bell",
                 PostalCode = "19019",
                 Line1 = "303 Cedar St",
                 Line2 = null
@@ -82,7 +76,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "San Antonio",
                 State = "TX",
                 Country = "USA",
-                Reference = "Near Alamo",
                 PostalCode = "78201",
                 Line1 = "404 Birch St",
                 Line2 = "Apt 3C"
@@ -93,7 +86,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "San Diego",
                 State = "CA",
                 Country = "USA",
-                Reference = "Near San Diego Zoo",
                 PostalCode = "92101",
                 Line1 = "505 Walnut St",
                 Line2 = null
@@ -104,7 +96,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "Dallas",
                 State = "TX",
                 Country = "USA",
-                Reference = "Near Dallas World Aquarium",
                 PostalCode = "75201",
                 Line1 = "606 Cherry St",
                 Line2 = "Suite 200"
@@ -115,7 +106,6 @@ public class AddressMap : IEntityTypeConfiguration<Address>
                 City = "San Jose",
                 State = "CA",
                 Country = "USA",
-                Reference = "Near Tech Museum",
                 PostalCode = "95101",
                 Line1 = "707 Spruce St",
                 Line2 = null

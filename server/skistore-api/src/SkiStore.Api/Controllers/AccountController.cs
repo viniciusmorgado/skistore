@@ -70,7 +70,7 @@ public class AccountController(SignInManager<AppUser> signInManager) : BaseApiCo
     }
 
     [HttpPost("address")]
-    public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDTO addressDto)
+    public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDto addressDto)
     {
         var user = await signInManager.UserManager.GetUserByEmailWithAddress(User);
 
