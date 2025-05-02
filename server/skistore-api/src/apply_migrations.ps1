@@ -1,0 +1,1 @@
+dotnet ef migrations add FixPaymentSummary -p .\SkiStore.Infrastructure\ -s .\SkiStore.Api\

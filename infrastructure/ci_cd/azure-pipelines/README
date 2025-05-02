@@ -1,0 +1,77 @@
+# CI/CD & Infrastructure Pipelines for SkiStore
+
+This repository contains two Azure DevOps pipelines that manage:
+
+1. **Application Deployment** (`azure-pipelines.yml`)
+2. **Infrastructure Provisioning** (`azure-pipelines-infra.yml`)
+
+---
+
+## 🚀 Pipeline 1: Application Deployment (`azure-pipelines.yml`)
+
+### Purpose
+Builds the Docker image for the main SkiStore application, pushes it to Docker Hub, and redeploys the container to a remote server via SSH.
+
+### Trigger
+Runs automatically when a **pull request is created from `develop` into `main`**.
+
+### Behavior
+1. Builds the Docker image using the production Dockerfile.
+2. Pushes the image to Docker Hub with the `:latest` tag.
+3. SSHs into the remote server and:
+   - Stops and removes the current container.
+   - Cleans unused Docker artifacts.
+   - Recreates the container with the updated image in the proper Docker network.
+
+### Required Pipeline Variables (set in Azure DevOps UI)
+| Variable           | Description                                |
+|--------------------|--------------------------------------------|
+| `serverUser`       | SSH username                               |
+| `serverPassword`   | SSH password                               |
+| `serverIP`         | IP address of the target server            |
+| `dockerRepository` | Full image path on Docker Hub              |
+| `projectName`      | Docker network and container name          |
+| `containerName`    | Name of the container to stop/recreate     |
+
+---
+
+## 🛠 Pipeline 2: Infrastructure Provisioning (`azure-pipelines-infra.yml`)
+
+### Purpose
+Manages adjacent infrastructure services for the SkiStore application (Redis, RabbitMQ, and PostgreSQL) using Docker, without Docker Compose.
+
+### Trigger
+Runs only when a **pull request is created from `develop` into `infra`**.
+
+### Behavior
+SSHs into the remote server and:
+1. Stops and removes the Redis, RabbitMQ, and Postgres containers.
+2. Runs `docker system prune -a -f` to clean up unused resources.
+3. Recreates the containers using image versions defined in the pipeline variables, attaching them to the same Docker network (`$projectName`).
+
+### Required Pipeline Variables (set in Azure DevOps UI)
+| Variable           | Description                                     |
+|--------------------|-------------------------------------------------|
+| `serverUser`       | SSH username                                    |
+| `serverPassword`   | SSH password                                    |
+| `serverIP`         | IP address of the target server                 |
+| `projectName`      | Docker network name (must match app network)    |
+| `postgresPassword` | Postgres root user password                     |
+| `redisImage`       | Docker image for Redis (e.g., `redis:7.2`)      |
+| `rabbitmqImage`    | Docker image for RabbitMQ (e.g., `rabbitmq:3.12-management`) |
+| `postgresImage`    | Docker image for PostgreSQL (e.g., `postgres:14`) |
+
+---
+
+## 🧪 Notes
+
+- All variables must be configured as **pipeline variables** in the Azure DevOps UI.
+- Volumes are **preserved** automatically for PostgreSQL.
+- Redis and RabbitMQ use default runtime configurations.
+
+---
+
+## 📦 No Docker Compose
+
+These pipelines serve as a lightweight **"Infrastructure as Code" (IaC)** solution for on-premise or minimal Docker deployments. Docker Compose is intentionally not used to keep control fine-grained and decoupled.
+
