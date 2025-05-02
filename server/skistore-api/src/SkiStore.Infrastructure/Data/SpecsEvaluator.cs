@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SkiStore.Core.Base.Entities;
 using SkiStore.Core.Base.Interfaces;
 
@@ -12,6 +13,9 @@ public class SpecsEvaluator<T> where T : BaseEntity
         if (spec.OrderByDescending != null) query = query.OrderByDescending(spec.OrderByDescending);
         if (spec.IsDistinct) query = query.Distinct();
         if (spec.IsPagingEnabled) query = query.Skip(spec.Skip).Take(spec.Take);
+
+        query = spec.Includes.Aggregate(query, (current, include) => current.Include(include));
+        query = spec.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
 
         return query;
     }

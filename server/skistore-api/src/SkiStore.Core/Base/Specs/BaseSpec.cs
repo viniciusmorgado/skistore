@@ -1,3 +1,4 @@
+#nullable enable
 using System.Linq.Expressions;
 using SkiStore.Core.Base.Interfaces;
 
@@ -9,13 +10,15 @@ public class BaseSpec<T>(Expression<Func<T, bool>>? criteria) : ISpecification<T
     public Expression<Func<T, bool>>? Criteria => criteria;
     public Expression<Func<T, object>>? OrderBy { get; private set; }
     public Expression<Func<T, object>>? OrderByDescending { get; private set; }
-
-
+    
+    public List<Expression<Func<T, object>>> Includes { get; } = [];
+    public List<string> IncludeStrings { get; } = [];
+    
     public bool IsDistinct { get; private set; }
     public int Take { get; private set; }
     public int Skip { get; private set; }
     public bool IsPagingEnabled { get; private set; }
-
+    
     public IQueryable<T> ApplyCriteria(IQueryable<T> query)
     {
         if (Criteria != null) query = query.Where(Criteria);
@@ -40,6 +43,15 @@ public class BaseSpec<T>(Expression<Func<T, bool>>? criteria) : ISpecification<T
         Skip = skip;
         Take = take;
         IsPagingEnabled = true;
+    }
+
+    protected void AddInclude(Expression<Func<T, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
+    protected void AddInclude(string includeStrings)
+    {
+        IncludeStrings.Add(includeStrings); // ThenInclude
     }
 }
 

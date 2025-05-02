@@ -72,7 +72,10 @@ public class OrdersController(ICartService cartService, IUnitOfWork worker) : Ba
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Product>> GetOrderById(int id)
     {
-        var product = await worker.Repository<Order>().GetByIdAsync(id);
-        return Ok(product);
+        // var product = await worker.Repository<Order>().GetByIdAsync(id);
+        var spec = new OrderSpec(User.GetEmail(), id);
+        var order = await worker.Repository<Order>().GetEntityWithSpec(spec);
+        
+        return Ok(order);
     }
 }

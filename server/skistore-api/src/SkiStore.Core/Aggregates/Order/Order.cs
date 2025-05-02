@@ -15,5 +15,4 @@ public class Order : BaseEntity
     public decimal SubTotal { get; set; }
     public OrderStatus OrderStatus { get; init; } = OrderStatus.Pending;
     public required string PaymentIntentId { get; set; }
-    
 }
