@@ -49,6 +49,11 @@ Thumbs.db
 *.tfstate
 *.lock.info
 
+# Angular
+.angular/
+.angular/*
+C:\Users\vinic\Documents\Projects\skistore\client\skistore-platform\.angular
+
 # C#
 appsettings.Development.json
 
