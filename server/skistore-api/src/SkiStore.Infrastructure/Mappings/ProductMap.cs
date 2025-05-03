@@ -157,56 +157,56 @@ public class ProductMap : IEntityTypeConfiguration<Product>
             new Product
             {
                 Id = 14,
-                Name = "Redis Red Boots",
-                Description = "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
+                Name = "Glacius Red and Black Boots",
+                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
                 Price = 250,
-                PictureUrl = "/images/products/boot-redis1.png",
+                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f64.png",
                 Type = "Boots",
-                Brand = "Redis",
+                Brand = "Glacius",
                 QuantityInStock = 49
             },
             new Product
             {
                 Id = 15,
-                Name = "Core Red Boots",
-                Description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
+                Name = "Glacius Yellow and Black Boots",
+                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
                 Price = 189.99M,
-                PictureUrl = "/images/products/boot-core2.png",
+                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f65.png",
                 Type = "Boots",
-                Brand = "NetCore",
+                Brand = "Glacius",
                 QuantityInStock = 28
             },
             new Product
             {
                 Id = 16,
-                Name = "Core Purple Boots",
-                Description = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
+                Name = "Glacius Red and White Boots",
+                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
                 Price = 199.99M,
-                PictureUrl = "/images/products/boot-core1.png",
+                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f66.png",
                 Type = "Boots",
-                Brand = "NetCore",
+                Brand = "Glacius",
                 QuantityInStock = 69
             },
             new Product
             {
                 Id = 17,
-                Name = "Angular Purple Boots",
-                Description = "Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.",
+                Name = "Glacius Purple and Black Boots",
+                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
                 Price = 150,
-                PictureUrl = "/images/products/boot-ang2.png",
+                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f67.png",
                 Type = "Boots",
-                Brand = "Angular",
+                Brand = "Glacius",
                 QuantityInStock = 35
             },
             new Product
             {
                 Id = 18,
-                Name = "Angular Blue Boots",
-                Description = "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
+                Name = "Glacius Green and Yellow Boots",
+                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
                 Price = 180,
-                PictureUrl = "/images/products/boot-ang1.png",
+                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f68.png",
                 Type = "Boots",
-                Brand = "Angular",
+                Brand = "Glacius",
                 QuantityInStock = 27
             }
         );

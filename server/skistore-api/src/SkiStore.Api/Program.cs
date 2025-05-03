@@ -73,8 +73,13 @@ using (var scope = app.Services.CreateScope())
     }
 }
 app.UseMiddleware<ExceptionMiddleware>();
+#if RELEASE
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
+#endif
+#if DEBUG
+app.UseCors("AllowAll");
+#endif
 app.MapControllers();
 app.MapGroup("api").MapIdentityApi<AppUser>();
 app.Run();
