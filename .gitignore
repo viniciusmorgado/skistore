@@ -645,6 +645,7 @@ FodyWeavers.xsd
 
 # SSL
 ssl/
+.tsbuildinfo
 
 # C# Configurations
 appsettings.Development.json
