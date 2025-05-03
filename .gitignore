@@ -25,6 +25,7 @@ npm-debug.log
 testem.log
 typings/
 .angular/
+.angular/.tsbuildinfo
 
 # e2e
 e2e/*.js
@@ -645,7 +646,6 @@ FodyWeavers.xsd
 
 # SSL
 ssl/
-.tsbuildinfo
 
 # C# Configurations
 appsettings.Development.json
