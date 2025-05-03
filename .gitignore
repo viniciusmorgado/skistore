@@ -50,9 +50,8 @@ Thumbs.db
 *.lock.info
 
 # Angular
-.angular/
-.angular/*
-C:\Users\vinic\Documents\Projects\skistore\client\skistore-platform\.angular
+.angular
+ssl
 
 # C#
 appsettings.Development.json
