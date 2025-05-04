@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Pagination } from '../../../shared/models/pagination';
 import { Product } from '../../../shared/models/product';
+import { ShopParams } from '../../../shared/models/shopParams';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +14,11 @@ export class ShopService {
   types: string[] = [];
   brands: string[] = [];
 
-  getProducts(brands?: string[], types?: string[], sort?: string) {
+  getProducts(shopParams: ShopParams) {
     let params = new HttpParams();
+    let brands = shopParams.brands;
+    let types = shopParams.types;
+    let sort = shopParams.sort;
 
     if (brands && brands.length > 0) {
       params = params.append('brands', brands.join(','));
