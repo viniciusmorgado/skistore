@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SkiStore.Infrastructure.Data;
@@ -11,9 +12,11 @@ using SkiStore.Infrastructure.Data;
 namespace SkiStore.Infrastructure.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250504225606_UpdateProductTableSeedData")]
+    partial class UpdateProductTableSeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -530,7 +533,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 2,
-                            Brand = "Avalanche",
+                            Brand = "Frostbite",
                             Description = "Cold-resistant and precision-fitted boot for expert-level skiing.",
                             Name = "Purple Frostbite Boot",
                             PictureUrl = "/images/products/purple-boot-1.png",
@@ -541,7 +544,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 3,
-                            Brand = "IceClaw",
+                            Brand = "Frostbite",
                             Description = "Identical model for testing duplicate filter behavior.",
                             Name = "Purple Frostbite Boot",
                             PictureUrl = "/images/products/purple-boot-2.png",
@@ -574,7 +577,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 6,
-                            Brand = "Inferna",
+                            Brand = "Avalanche",
                             Description = "Waterproof gloves with reinforced grip and thermal lining.",
                             Name = "Blue Avalanche Gloves",
                             PictureUrl = "/images/products/blue-gloves.png",
@@ -596,7 +599,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 8,
-                            Brand = "Stormrider",
+                            Brand = "Frostborn",
                             Description = "Breathable and warm gloves for mid-range temperatures.",
                             Name = "Green Frostborn Gloves",
                             PictureUrl = "/images/products/green-gloves-2.png",
@@ -618,7 +621,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 10,
-                            Brand = "Nightshade",
+                            Brand = "Alpine",
                             Description = "Lightweight and stylish winter hat for ski season.",
                             Name = "Blue Alpine Hat",
                             PictureUrl = "/images/products/blue-hat.png",
@@ -640,7 +643,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 12,
-                            Brand = "Windhowl",
+                            Brand = "Eclipse",
                             Description = "Comfortable and thermal-retentive ski hat.",
                             Name = "Purple Eclipse Hat",
                             PictureUrl = "/images/products/purple-hat.png",
@@ -662,7 +665,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 14,
-                            Brand = "Hawk",
+                            Brand = "Talon",
                             Description = "Freestyle board with reinforced bindings.",
                             Name = "Crimson Talon Ski Board",
                             PictureUrl = "/images/products/ski-board-2.png",
@@ -684,7 +687,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 16,
-                            Brand = "Serpent",
+                            Brand = "Shadowline",
                             Description = "Wide profile board for backcountry powder.",
                             Name = "Shadowline Drift Ski Board",
                             PictureUrl = "/images/products/ski-board-4.png",
@@ -706,7 +709,7 @@ namespace SkiStore.Infrastructure.Migrations
                         new
                         {
                             Id = 18,
-                            Brand = "Glacier",
+                            Brand = "Volt",
                             Description = "Stiff board for experienced riders and high-speed descent.",
                             Name = "Volt Striker Ski Board",
                             PictureUrl = "/images/products/ski-board-6.png",

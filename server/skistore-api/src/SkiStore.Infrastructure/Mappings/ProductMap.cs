@@ -14,200 +14,200 @@ public class ProductMap : IEntityTypeConfiguration<Product>
             new Product
             {
                 Id = 1,
-                Name = "Angular Speedster Board 2000",
-                Description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
-                Price = 200,
-                PictureUrl = "/images/products/sb-ang1.png",
-                Type = "Boards",
-                Brand = "Angular",
-                QuantityInStock = 82
+                Name = "Blue Avalanche Boot",
+                Description = "Engineered for all-terrain skiing with superior control and comfort.",
+                Price = 199.99M,
+                PictureUrl = "/images/products/blue-boot.png",
+                Type = "Boots",
+                Brand = "Avalanche",
+                QuantityInStock = 50
             },
             new Product
             {
                 Id = 2,
-                Name = "Green Angular Board 3000",
-                Description = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.",
-                Price = 150,
-                PictureUrl = "/images/products/sb-ang2.png",
-                Type = "Boards",
-                Brand = "Angular",
-                QuantityInStock = 75
-            },
-            new Product
-            {
-                Id = 3,
-                Name = "Core Board Speed Rush 3",
-                Description = "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
-                Price = 180,
-                PictureUrl = "/images/products/sb-core1.png",
-                Type = "Boards",
-                Brand = "NetCore",
-                QuantityInStock = 3
-            },
-            new Product
-            {
-                Id = 4,
-                Name = "Net Core Super Board",
-                Description = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
-                Price = 300,
-                PictureUrl = "/images/products/sb-core2.png",
-                Type = "Boards",
-                Brand = "NetCore",
-                QuantityInStock = 52
-            },
-            new Product
-            {
-                Id = 5,
-                Name = "React Board Super Whizzy Fast",
-                Description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa. Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
-                Price = 250,
-                PictureUrl = "/images/products/sb-react1.png",
-                Type = "Boards",
-                Brand = "React",
-                QuantityInStock = 97
-            },
-            new Product
-            {
-                Id = 6,
-                Name = "Typescript Entry Board",
-                Description = "Aenean nec lorem. In porttitor. Donec laoreet nonummy augue.",
-                Price = 120,
-                PictureUrl = "/images/products/sb-ts1.png",
-                Type = "Boards",
-                Brand = "Typescript",
-                QuantityInStock = 37
-            },
-            new Product
-            {
-                Id = 7,
-                Name = "Core Blue Hat",
-                Description = "Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
-                Price = 10,
-                PictureUrl = "/images/products/hat-core1.png",
-                Type = "Hats",
-                Brand = "NetCore",
-                QuantityInStock = 32
-            },
-            new Product
-            {
-                Id = 8,
-                Name = "Green React Woolen Hat",
-                Description = "Suspendisse dui purus, scelerisque at, vulputate vitae, pretium mattis, nunc. Mauris eget neque at sem venenatis eleifend. Ut nonummy.",
-                Price = 8,
-                PictureUrl = "/images/products/hat-react1.png",
-                Type = "Hats",
-                Brand = "React",
-                QuantityInStock = 6
-            },
-            new Product
-            {
-                Id = 9,
-                Name = "Purple React Woolen Hat",
-                Description = "Fusce posuere, magna sed pulvinar ultricies, purus lectus malesuada libero, sit amet commodo magna eros quis urna.",
-                Price = 15,
-                PictureUrl = "/images/products/hat-react2.png",
-                Type = "Hats",
-                Brand = "React",
-                QuantityInStock = 17
-            },
-            new Product
-            {
-                Id = 10,
-                Name = "Blue Code Gloves",
-                Description = "Nunc viverra imperdiet enim. Fusce est. Vivamus a tellus.",
-                Price = 18,
-                PictureUrl = "/images/products/glove-code1.png",
-                Type = "Gloves",
-                Brand = "VS Code",
-                QuantityInStock = 74
-            },
-            new Product
-            {
-                Id = 11,
-                Name = "Green Code Gloves",
-                Description = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
-                Price = 15,
-                PictureUrl = "/images/products/glove-code2.png",
-                Type = "Gloves",
-                Brand = "VS Code",
-                QuantityInStock = 19
-            },
-            new Product
-            {
-                Id = 12,
-                Name = "Purple React Gloves",
-                Description = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas porttitor congue massa.",
-                Price = 16,
-                PictureUrl = "/images/products/glove-react1.png",
-                Type = "Gloves",
-                Brand = "React",
-                QuantityInStock = 77
-            },
-            new Product
-            {
-                Id = 13,
-                Name = "Green React Gloves",
-                Description = "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
-                Price = 14,
-                PictureUrl = "/images/products/glove-react2.png",
-                Type = "Gloves",
-                Brand = "React",
-                QuantityInStock = 45
-            },
-            new Product
-            {
-                Id = 14,
-                Name = "Glacius Red and Black Boots",
-                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
-                Price = 250,
-                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f64.png",
-                Type = "Boots",
-                Brand = "Glacius",
-                QuantityInStock = 49
-            },
-            new Product
-            {
-                Id = 15,
-                Name = "Glacius Yellow and Black Boots",
-                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
+                Name = "Purple Frostbite Boot",
+                Description = "Cold-resistant and precision-fitted boot for expert-level skiing.",
                 Price = 189.99M,
-                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f65.png",
+                PictureUrl = "/images/products/purple-boot-1.png",
                 Type = "Boots",
-                Brand = "Glacius",
-                QuantityInStock = 28
-            },
-            new Product
-            {
-                Id = 16,
-                Name = "Glacius Red and White Boots",
-                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
-                Price = 199.99M,
-                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f66.png",
-                Type = "Boots",
-                Brand = "Glacius",
-                QuantityInStock = 69
-            },
-            new Product
-            {
-                Id = 17,
-                Name = "Glacius Purple and Black Boots",
-                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
-                Price = 150,
-                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f67.png",
-                Type = "Boots",
-                Brand = "Glacius",
+                Brand = "Avalanche",
                 QuantityInStock = 35
             },
             new Product
             {
-                Id = 18,
-                Name = "Glacius Green and Yellow Boots",
-                Description = "Engineered for performance and comfort, this ski boot delivers precise control on the slopes. With a durable outer shell, customizable fit, and responsive flex, it's built to handle everything from groomed runs to backcountry adventures. The insulated liner keeps your feet warm, while micro-adjustable buckles ensure a secure fit all day long.",
-                Price = 180,
-                PictureUrl = "/images/products/68164aa8-1e5c-800a-a02b-7d7093ce6f68.png",
+                Id = 3,
+                Name = "Purple Frostbite Boot",
+                Description = "Identical model for testing duplicate filter behavior.",
+                Price = 189.99M,
+                PictureUrl = "/images/products/purple-boot-2.png",
                 Type = "Boots",
-                Brand = "Glacius",
-                QuantityInStock = 27
+                Brand = "IceClaw",
+                QuantityInStock = 30
+            },
+            new Product
+            {
+                Id = 4,
+                Name = "Red IceClaw Boot",
+                Description = "Aggressive design for high-speed downhill skiing.",
+                Price = 209.99M,
+                PictureUrl = "/images/products/red-boot-1.png",
+                Type = "Boots",
+                Brand = "IceClaw",
+                QuantityInStock = 40
+            },
+            new Product
+            {
+                Id = 5,
+                Name = "Red Inferna Boot",
+                Description = "Thermal-insulated boot for enhanced warmth and performance.",
+                Price = 219.99M,
+                PictureUrl = "/images/products/red-boot-2.png",
+                Type = "Boots",
+                Brand = "Inferna",
+                QuantityInStock = 42
+            },
+            new Product
+            {
+                Id = 6,
+                Name = "Blue Avalanche Gloves",
+                Description = "Waterproof gloves with reinforced grip and thermal lining.",
+                Price = 29.99M,
+                PictureUrl = "/images/products/blue-gloves.png",
+                Type = "Gloves",
+                Brand = "Inferna",
+                QuantityInStock = 60
+            },
+            new Product
+            {
+                Id = 7,
+                Name = "Green Stormrider Gloves",
+                Description = "All-weather gloves designed for intense mountain use.",
+                Price = 24.99M,
+                PictureUrl = "/images/products/green-gloves-1.png",
+                Type = "Gloves",
+                Brand = "Stormrider",
+                QuantityInStock = 55
+            },
+            new Product
+            {
+                Id = 8,
+                Name = "Green Frostborn Gloves",
+                Description = "Breathable and warm gloves for mid-range temperatures.",
+                Price = 22.99M,
+                PictureUrl = "/images/products/green-gloves-2.png",
+                Type = "Gloves",
+                Brand = "Stormrider",
+                QuantityInStock = 48
+            },
+            new Product
+            {
+                Id = 9,
+                Name = "Purple Nightshade Gloves",
+                Description = "Sleek insulated gloves for comfortable long sessions.",
+                Price = 26.99M,
+                PictureUrl = "/images/products/purple-gloves.png",
+                Type = "Gloves",
+                Brand = "Nightshade",
+                QuantityInStock = 52
+            },
+            new Product
+            {
+                Id = 10,
+                Name = "Blue Alpine Hat",
+                Description = "Lightweight and stylish winter hat for ski season.",
+                Price = 19.99M,
+                PictureUrl = "/images/products/blue-hat.png",
+                Type = "Hats",
+                Brand = "Nightshade",
+                QuantityInStock = 33
+            },
+            new Product
+            {
+                Id = 11,
+                Name = "Green Windhowl Hat",
+                Description = "Windproof and breathable hat for alpine weather.",
+                Price = 17.99M,
+                PictureUrl = "/images/products/green-hat.png",
+                Type = "Hats",
+                Brand = "Windhowl",
+                QuantityInStock = 38
+            },
+            new Product
+            {
+                Id = 12,
+                Name = "Purple Eclipse Hat",
+                Description = "Comfortable and thermal-retentive ski hat.",
+                Price = 18.99M,
+                PictureUrl = "/images/products/purple-hat.png",
+                Type = "Hats",
+                Brand = "Windhowl",
+                QuantityInStock = 29
+            },
+            new Product
+            {
+                Id = 13,
+                Name = "Midnight Hawk Ski Board",
+                Description = "High-speed carving board with carbon core.",
+                Price = 320.00M,
+                PictureUrl = "/images/products/ski-board-1.png",
+                Type = "Boards",
+                Brand = "Hawk",
+                QuantityInStock = 15
+            },
+            new Product
+            {
+                Id = 14,
+                Name = "Crimson Talon Ski Board",
+                Description = "Freestyle board with reinforced bindings.",
+                Price = 299.99M,
+                PictureUrl = "/images/products/ski-board-2.png",
+                Type = "Boards",
+                Brand = "Hawk",
+                QuantityInStock = 21
+            },
+            new Product
+            {
+                Id = 15,
+                Name = "Frost Serpent Ski Board",
+                Description = "Lightweight and flexible board for tricks.",
+                Price = 289.99M,
+                PictureUrl = "/images/products/ski-board-3.png",
+                Type = "Boards",
+                Brand = "Serpent",
+                QuantityInStock = 25
+            },
+            new Product
+            {
+                Id = 16,
+                Name = "Shadowline Drift Ski Board",
+                Description = "Wide profile board for backcountry powder.",
+                Price = 310.00M,
+                PictureUrl = "/images/products/ski-board-4.png",
+                Type = "Boards",
+                Brand = "Serpent",
+                QuantityInStock = 18
+            },
+            new Product
+            {
+                Id = 17,
+                Name = "Glacier Edge Ski Board",
+                Description = "Edge-controlled board for slalom skiing.",
+                Price = 305.00M,
+                PictureUrl = "/images/products/ski-board-5.png",
+                Type = "Boards",
+                Brand = "Glacier",
+                QuantityInStock = 17
+            },
+            new Product
+            {
+                Id = 18,
+                Name = "Volt Striker Ski Board",
+                Description = "Stiff board for experienced riders and high-speed descent.",
+                Price = 315.00M,
+                PictureUrl = "/images/products/ski-board-6.png",
+                Type = "Boards",
+                Brand = "Glacier",
+                QuantityInStock = 22
             }
         );
 #endif
