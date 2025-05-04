@@ -22,6 +22,7 @@ export class ShopComponent implements OnInit {
   products: Product[] = [];
   selectedBrands: string[] = [];
   selectedTypes: string[] = [];
+  
   private dialogService = inject(MatDialog);
   private shopService = inject(ShopService);
 
@@ -53,7 +54,10 @@ export class ShopComponent implements OnInit {
           console.log(result);
           this.selectedBrands = result.selectedBrands;
           this.selectedTypes = result.selectedTypes;
-          // apply filters
+          this.shopService.getProducts(this.selectedBrands, this.selectedTypes).subscribe({
+            next: response => this.products = response.data,
+            error: error => console.log(error)
+          })
         }
       }
     })
