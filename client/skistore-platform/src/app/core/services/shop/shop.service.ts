@@ -19,6 +19,7 @@ export class ShopService {
     let brands = shopParams.brands;
     let types = shopParams.types;
     let sort = shopParams.sort;
+    let search = shopParams.search;
 
     if (brands && brands.length > 0) {
       params = params.append('brands', brands.join(','));
@@ -30,6 +31,10 @@ export class ShopService {
 
     if (sort) {
       params = params.append('sort', sort);
+    }
+
+    if (search) {
+      params = params.append('search', search);
     }
 
     params = params.append('pageSize', shopParams.pageSize);

@@ -1,3 +1,11 @@
 .mat-paginator-custom {
     background-color: white !important;
 }
+
+.text-primary {
+    color: #2563eb;
+}
+
+button.match-input-height {
+    height: var(--mat-form-field-container-height) !important;
+}
