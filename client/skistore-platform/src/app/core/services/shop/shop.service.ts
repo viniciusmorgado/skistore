@@ -6,31 +6,36 @@ import { Product } from '../../../shared/models/product';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ShopService {
   baseUrl = 'http://localhost:5001/api/';
   private http = inject(HttpClient);
   types: string[] = [];
   brands: string[] = [];
 
-  getProducts(brands?: string[], types?: string[]) {
+  getProducts(brands?: string[], types?: string[], sort?: string) {
     let params = new HttpParams();
-    
+
     if (brands && brands.length > 0) {
       params = params.append('brands', brands.join(','));
     }
-    
+
     if (types && types.length > 0) {
       params = params.append('types', types.join(','));
     }
 
+    if (sort) {
+      params = params.append('sort', sort);
+    }
+
     params = params.append('pageSize', 8);
-    
-    return this.http.get<Pagination<Product>>(this.baseUrl + 'products', {params});
+
+    return this.http.get<Pagination<Product>>(this.baseUrl + 'products', { params });
   }
 
   getBrands() {
     if (this.brands.length > 0) return;
-    
+
     return this.http.get<string[]>(this.baseUrl + 'products/brands').subscribe({
       next: response => this.brands = response
     })
