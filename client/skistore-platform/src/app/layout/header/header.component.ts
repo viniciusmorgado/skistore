@@ -15,7 +15,7 @@ import { NavbarComponent } from "../navbar/navbar.component";
     NavbarComponent
 ],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.scss'
+  styleUrl: './header.component.css'
 })
 
 export class HeaderComponent {

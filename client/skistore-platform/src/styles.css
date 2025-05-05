@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+.mat-stroked-button-custom {
+    --mdc-outlined-button-outline-color: #2563eb;
+}

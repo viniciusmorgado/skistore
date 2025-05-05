@@ -29,7 +29,7 @@ import { NgIf } from '@angular/common';
     NgIf
   ],
   templateUrl: './shop.component.html',
-  styleUrl: './shop.component.scss'
+  styleUrl: './shop.component.css'
 })
 
 export class ShopComponent implements OnInit {

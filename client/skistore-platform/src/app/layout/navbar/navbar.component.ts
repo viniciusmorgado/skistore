@@ -6,7 +6,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrl: './navbar.component.css'
 })
 
 export class NavbarComponent {

@@ -16,7 +16,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   templateUrl: './filters-dialog.component.html',
-  styleUrl: './filters-dialog.component.scss'
+  styleUrl: './filters-dialog.component.css'
 })
 
 export class FiltersDialogComponent {
