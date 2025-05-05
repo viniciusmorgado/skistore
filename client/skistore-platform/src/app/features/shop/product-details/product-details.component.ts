@@ -1,5 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ShopComponent } from '../shop.component';
 import { ShopService } from '../../../core/services/shop/shop.service';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../../shared/models/product';
@@ -15,7 +14,7 @@ export class ProductDetailsComponent implements OnInit {
   private shopService = inject(ShopService);
   private activatedRoute = inject(ActivatedRoute);
   product?: Product;
-  
+
   ngOnInit(): void {
     this.loadProduct();
   }

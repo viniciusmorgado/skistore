@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { FiltersDialogComponent } from './filters-dialog.component';
 
 describe('FiltersDialogComponent', () => {

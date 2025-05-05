@@ -21,13 +21,13 @@ import { FormsModule } from '@angular/forms';
 
 export class FiltersDialogComponent {
   shopService = inject(ShopService);
-  
+
   private dialogRef = inject(MatDialogRef<FiltersDialogComponent>);
   private data = inject(MAT_DIALOG_DATA);
-  
+
   selectedBrands: string[] = this.data.selectedBrands;
   selectedTypes: string[] = this.data.selectedTypes;
-  
+
   applyFilters() {
     this.dialogRef.close({
       selectedBrands: this.selectedBrands,
