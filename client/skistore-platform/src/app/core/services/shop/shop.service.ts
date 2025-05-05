@@ -4,10 +4,7 @@ import { Pagination } from '../../../shared/models/pagination';
 import { Product } from '../../../shared/models/product';
 import { ShopParams } from '../../../shared/models/shopParams';
 
-@Injectable({
-  providedIn: 'root'
-})
-
+@Injectable({ providedIn: 'root' })
 export class ShopService {
   baseUrl = 'http://localhost:5001/api/';
   private http = inject(HttpClient);
