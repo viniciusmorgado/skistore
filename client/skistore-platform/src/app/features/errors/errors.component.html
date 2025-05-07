@@ -1,1 +1,8 @@
-<p>errors works!</p>
+<div class="mt-5 flex justify-center gap-4">
+    
+    <button mat-stroked-button class="mat-stroked-button-custom" (click)="get401Error()">401 - Unauthorized</button>
+	<button mat-stroked-button class="mat-stroked-button-custom" (click)="get400Error()">400 - Bad Request</button>
+	<button mat-stroked-button class="mat-stroked-button-custom" (click)="get404Error()">404 - not found</button>
+	<button mat-stroked-button class="mat-stroked-button-custom" (click)="getInternalError()">Internal error</button>
+	<button mat-stroked-button class="mat-stroked-button-custom" (click)="getValidationError()">Validator error</button>
+</div>

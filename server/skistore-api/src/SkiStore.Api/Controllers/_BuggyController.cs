@@ -22,7 +22,7 @@ public class _BuggyController : BaseApiController
         });
     }
 
-    [HttpGet("badrequest")]
+    [HttpGet("bad-request")]
     public IActionResult GetBadRequest()
     {
         return BadRequest(new
