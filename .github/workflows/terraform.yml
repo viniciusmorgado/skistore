@@ -72,7 +72,7 @@ jobs:
         }'
     
     - name: Enable Bucket Versioning
-    - run: |
+      run: |
         get_bucket_versioning_policy=$(aws s3api get-bucket-versioning --bucket $BUCKET_NAME)
         get_policy_status=$(echo "$get_bucket_versioning_policy" | jq -r '.Status')
         
