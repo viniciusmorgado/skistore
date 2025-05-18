@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+env:
+  BUCKET_NAME: "${{ secrets.STATE_BUCKET_NAME }}"
+  AWS_REGION: "${{ secrets.AWS_REGION }}"
+
 jobs:
   terraform:
     name: 'Terraform'
@@ -40,12 +44,9 @@ jobs:
 
     - name: Create Terraform State s3 bucket if not exists
       run: |
-        BUCKET_NAME="${{ secrets.STATE_BUCKET_NAME }}"
-        REGION="${{ secrets.AWS_REGION }}"
-        
         if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
           echo "Bucket doesn't exist. Creating..."
-          aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$REGION" --create-bucket-configuration LocationConstraint="$REGION"
+          aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$AWS_REGION" --create-bucket-configuration LocationConstraint="$AWS_REGION"
         else
           echo "Bucket already exists. Skipping creation."
         fi
@@ -83,9 +84,8 @@ jobs:
       working-directory: ./infrastructure/terraform/environments/prod
       run: |
         TABLE_NAME="${{ secrets.LOCK_IN_DYNAMO_TABLE_NAME }}"
-        REGION="${{ secrets.AWS_REGION }}"
-        
-        if ! aws dynamodb describe-table --table-name "$TABLE_NAME" --region "$REGION" 2>/dev/null; then
+       
+        if ! aws dynamodb describe-table --table-name "$TABLE_NAME" --region "$AWS_REGION" 2>/dev/null; then
           echo "Table doesn't exist. Creating via Terraform."
           terraform apply -lock=false \
             -target=aws_dynamodb_table.terraform_locks \
