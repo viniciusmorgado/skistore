@@ -65,7 +65,7 @@ jobs:
     
     - name: Block all public ACL / policy
       run: | 
-        aws s3api put-public-access-block --bucket "$BUCKET" --public-access-block-configuration '{
+        aws s3api put-public-access-block --bucket "$BUCKET_NAME" --public-access-block-configuration '{
           "BlockPublicAcls": true,
           "IgnorePublicAcls": true,
           "BlockPublicPolicy": true,
