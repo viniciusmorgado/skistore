@@ -59,12 +59,27 @@ jobs:
         ]
          }'
     
-    - name: Terraform Init
+    - name: Create DynamoDB Lock Table if not exists
       working-directory: ./infrastructure/terraform/environments/prod
-      run: terraform init
+      run: |
+        TABLE_NAME="terraform-lock-table"
+        REGION="${{ secrets.AWS_REGION }}"
+        
+        if ! aws dynamodb describe-table --table-name "$TABLE_NAME" --region "$REGION" 2>/dev/null; then
+          echo "Table doesn't exist. Creating via Terraform."
+          terraform apply -lock=false \
+            -target=aws_dynamodb_table.terraform_locks \
+            -var="region=${{ secrets.TF_REGION }}" \
+            -var="project_name=${{ secrets.TF_PROJECT_NAME }}" \
+            -var="db_user=${{ secrets.TF_DB_USER }}" \
+            -var="db_pass=${{ secrets.TF_DB_PASS }}" \
+            -auto-approve
+        else
+          echo "Lock table already exists. Skipping creation."
+        fi
       env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     # # Generates an execution plan for Terraform
     # - name: Terraform Plan
