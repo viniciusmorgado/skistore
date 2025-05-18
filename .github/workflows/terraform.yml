@@ -52,7 +52,6 @@ jobs:
 
     - name: Encrypt Terraform State s3 Bucket
       run: |    
-        # Apply bucket encryption
         aws s3api put-bucket-encryption --bucket "$BUCKET_NAME" --server-side-encryption-configuration '{
           "Rules": [
             {
@@ -64,7 +63,7 @@ jobs:
         }'
     
     - name: Block all public ACL / policy
-    - run: | 
+      run: | 
         aws s3api put-public-access-block --bucket "$BUCKET" --public-access-block-configuration '{
           "BlockPublicAcls": true,
           "IgnorePublicAcls": true,
