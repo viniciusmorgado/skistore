@@ -34,12 +34,12 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-2
+        aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Create Terraform State S3 bucket if not exists
       run: |
         BUCKET_NAME="skistore-state-bucket"
-        REGION="us-east-2"
+        REGION="${{ secrets.AWS_REGION }}"
         if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
           echo "Bucket doesn't exist. Creating..."
           aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$REGION" --create-bucket-configuration LocationConstraint="$REGION"
@@ -47,7 +47,7 @@ jobs:
           echo "Bucket already exists. Skipping creation."
         fi
 
-          # Apply bucket encryption regardless
+        # Apply bucket encryption regardless
         aws s3api put-bucket-encryption --bucket "$BUCKET_NAME" --server-side-encryption-configuration '{
         "Rules": [
           {
@@ -58,12 +58,12 @@ jobs:
         ]
          }'
     
-    - name: Terraform Init
-      working-directory: ./infrastructure/terraform/environments/prod
-      run: terraform init
-      env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    # - name: Terraform Init
+    #   working-directory: ./infrastructure/terraform/environments/prod
+    #   run: terraform init
+    #   env:
+    #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     # # Generates an execution plan for Terraform
     # - name: Terraform Plan
