@@ -28,6 +28,7 @@ jobs:
       run: |
         sudo snap refresh
         sudo snap install aws-cli --classic
+        sudo snap install terraform --classic
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
@@ -58,12 +59,12 @@ jobs:
         ]
          }'
     
-    # - name: Terraform Init
-    #   working-directory: ./infrastructure/terraform/environments/prod
-    #   run: terraform init
-    #   env:
-    #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    - name: Terraform Init
+      working-directory: ./infrastructure/terraform/environments/prod
+      run: terraform init
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     # # Generates an execution plan for Terraform
     # - name: Terraform Plan
