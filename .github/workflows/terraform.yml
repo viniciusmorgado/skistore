@@ -77,7 +77,7 @@ jobs:
           echo "Table doesn't exist. Creating via Terraform."
           terraform apply -lock=false \
             -target=aws_dynamodb_table.terraform_locks \
-            -var="region=${{ secrets.TF_REGION }}" \
+            -var="region=${{ secrets.AWS_REGION }}" \
             -var="project_name=${{ secrets.TF_PROJECT_NAME }}" \
             -var="db_user=${{ secrets.TF_DB_USER }}" \
             -var="db_pass=${{ secrets.TF_DB_PASS }}" \
@@ -92,7 +92,7 @@ jobs:
     - name: Terraform Plan
       working-directory: ./infrastructure/terraform/environments/prod
       run: terraform plan -input=false \
-            -var="region=${{ secrets.TF_REGION }}" \
+            -var="region=${{ secrets.AWS_REGION }}" \
             -var="project_name=${{ secrets.TF_PROJECT_NAME }}" \
             -var="db_user=${{ secrets.TF_DB_USER }}" \
             -var="db_pass=${{ secrets.TF_DB_PASS }}" \
