@@ -1,0 +1,78 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Set up AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y awscli
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+
+    - name: Create Terraform State S3 bucket if not exists
+      run: |
+        BUCKET_NAME="skistore-state-bucket"
+        REGION="us-east-1"
+        if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+          echo "Bucket doesn't exist. Creating..."
+          aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$REGION" --create-bucket-configuration LocationConstraint="$REGION"
+        else
+          echo "Bucket already exists. Skipping creation."
+        fi
+
+          # Apply bucket encryption regardless
+        aws s3api put-bucket-encryption --bucket "$BUCKET_NAME" --server-side-encryption-configuration '{
+        "Rules": [
+          {
+            "ApplyServerSideEncryptionByDefault": {
+            "SSEAlgorithm": "AES256"
+          }
+         }
+        ]
+         }'
+    
+    # # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    # - name: Terraform Init
+    #   run: terraform init
+    #   env:
+    #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    # # Generates an execution plan for Terraform
+    # - name: Terraform Plan
+    #   run: terraform plan -input=false
+    #   env:
+    #       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    #   # On push to "main", build or change infrastructure according to Terraform configuration files
+    # - name: Terraform Apply
+    #   if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
+    #   run: terraform apply -auto-approve -input=false
