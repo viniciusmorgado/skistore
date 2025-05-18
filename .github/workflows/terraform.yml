@@ -40,9 +40,8 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
-
-
-    - name: Create Terraform State s3 bucket if not exists
+			
+    - name: Create Terraform State s3 bucket IF NOT EXISTS
       run: |
         if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
           echo "Bucket doesn't exist. Creating..."
@@ -71,7 +70,18 @@ jobs:
           "BlockPublicPolicy": true,
           "RestrictPublicBuckets": true
         }'
-
+    
+    - name: Enable Bucket Versioning
+    - run: |
+        get_bucket_versioning_policy=$(aws s3api get-bucket-versioning --bucket $BUCKET_NAME)
+        get_policy_status=$(echo "$get_bucket_versioning_policy" | jq -r '.Status')
+        
+        if [ -z "$get_policy_status" ]; then
+              aws s3api put-bucket-versioning --bucket $BUCKET_NAME --versioning-configuration Status=Enabled
+        else
+          echo "Bucket is already versioned. Skipping changes."
+        if
+      
     - name: Terraform Init
       working-directory: ./infrastructure/terraform/environments/prod
       run: terraform init -input=false
@@ -80,7 +90,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     
-    - name: Create DynamoDB Lock Table if not exists
+    - name: Create DynamoDB Lock Table IF NOT EXISTS
       working-directory: ./infrastructure/terraform/environments/prod
       run: |
         TABLE_NAME="${{ secrets.LOCK_IN_DYNAMO_TABLE_NAME }}"
