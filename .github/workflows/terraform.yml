@@ -50,16 +50,24 @@ jobs:
 
       - name: Encrypt Terraform State S3 bucket
         run: |
+          ENCRYPTION_STATUS=$(aws s3api get-bucket-encryption --bucket "$BUCKET_NAME" 2>/dev/null || true)
+          
+          if echo "$ENCRYPTION_STATUS" | grep -q '"SSEAlgorithm": "aws:kms"'; then
+            echo "Bucket is already encrypted with KMS. Skipping."
+          else
+          
+          echo "Applying encryption settings..."
           aws s3api put-bucket-encryption --bucket "$BUCKET_NAME" --server-side-encryption-configuration '{
             "Rules": [
               {
-                "ApplyServerSideEncryptionByDefault": {
+                ApplyServerSideEncryptionByDefault": {
                   "SSEAlgorithm": "aws:kms"
                 }
               }
             ]
           }'
-
+          fi
+ 
       - name: Block all public ACL / policy
         run: |
           aws s3api put-public-access-block --bucket "$BUCKET_NAME" --public-access-block-configuration '{
