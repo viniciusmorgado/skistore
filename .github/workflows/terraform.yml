@@ -91,7 +91,12 @@ jobs:
 
     - name: Terraform Plan
       working-directory: ./infrastructure/terraform/environments/prod
-      run: terraform plan -input=false
+      run: terraform plan -input=false \
+            -var="region=${{ secrets.TF_REGION }}" \
+            -var="project_name=${{ secrets.TF_PROJECT_NAME }}" \
+            -var="db_user=${{ secrets.TF_DB_USER }}" \
+            -var="db_pass=${{ secrets.TF_DB_PASS }}" \
+            -auto-approve
       env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
