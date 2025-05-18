@@ -23,23 +23,23 @@ jobs:
         shell: bash
 
     steps:
-      - name: Checkout
+      - name: "[Repo] Checkout source code"
         uses: actions/checkout@v4
 
-      - name: Set up AWS/Terraform CLI
+      - name: "[Tooling] Set up AWS CLI and Terraform"
         run: |
           sudo snap refresh
           sudo snap install aws-cli --classic
           sudo snap install terraform --classic
 
-      - name: Configure AWS credentials
+      - name: "[Auth] Configure AWS credentials"
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Create Terraform State S3 bucket
+      - name: "[S3 Infra] Create Terraform state bucket"
         run: |
           if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
             echo "Bucket doesn't exist. Creating..."
@@ -48,7 +48,7 @@ jobs:
             echo "Bucket already exists. Skipping creation."
           fi
 
-      - name: Encrypt Terraform State S3 bucket
+      - name: "[S3 Security] Enforce bucket encryption (KMS)"
         run: |
           ENCRYPTION_STATUS=$(aws s3api get-bucket-encryption --bucket "$BUCKET_NAME" 2>/dev/null || true)
           
@@ -68,7 +68,7 @@ jobs:
           }'
           fi
  
-      - name: Ensure S3 bucket blocks public ACLs and policies
+      - name: "[S3 Security] Enforce PublicAccessBlock settings"
         run: |
           CONFIG_JSON=$(aws s3api get-public-access-block --bucket "$BUCKET_NAME" 2>/dev/null || echo "")
           
@@ -105,25 +105,26 @@ jobs:
             echo "Public access block configuration updated."
           fi
 
-      - name: Enable Bucket Versioning
+      - name: "[S3 Compliance] Enable bucket versioning"
         run: |
-          get_bucket_versioning_policy=$(aws s3api get-bucket-versioning --bucket $BUCKET_NAME)
-          get_policy_status=$(echo "$get_bucket_versioning_policy" | jq -r '.Status')
-
-          if [ -z "$get_policy_status" ]; then
-            aws s3api put-bucket-versioning --bucket $BUCKET_NAME --versioning-configuration Status=Enabled
+          get_bucket_versioning_policy=$(aws s3api get-bucket-versioning --bucket "$BUCKET_NAME" 2>/dev/null || echo "{}")
+          get_policy_status=$(echo "$get_bucket_versioning_policy" | jq -r '.Status // empty')
+          
+          if [[ -z "$get_policy_status" || "$get_policy_status" == "Suspended" || "$get_policy_status" != "Enabled" ]]; then
+            echo "Enabling bucket versioning (current: ${get_policy_status:-Not Set})"
+            aws s3api put-bucket-versioning --bucket "$BUCKET_NAME" --versioning-configuration Status=Enabled
           else
             echo "Bucket is already versioned. Skipping changes."
           fi
 
-      - name: Terraform Init
+      - name: "[Terraform] Initialize"
         working-directory: ./infrastructure/terraform/environments/prod
         run: terraform init -input=false
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: Create DynamoDB Lock Table if not exists
+      - name: "[DynamoDB Infra] Create Terraform lock table if missing"
         working-directory: ./infrastructure/terraform/environments/prod
         run: |
           TABLE_NAME="${{ secrets.LOCK_IN_DYNAMO_TABLE_NAME }}"
