@@ -33,6 +33,10 @@ terraform apply
 Initialize backend (backend expects S3 + DynamoDB lock):
 terraform init
 
+Inside environments/prod creates .env:
+
+
+
 Create only the DynamoDB table first without locking:
 terraform apply -lock=false "-target=aws_dynamodb_table.terraform_locks"
 
