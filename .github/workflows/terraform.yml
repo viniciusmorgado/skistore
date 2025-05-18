@@ -39,7 +39,7 @@ jobs:
     - name: Create Terraform State S3 bucket if not exists
       run: |
         BUCKET_NAME="skistore-state-bucket"
-        REGION="us-east-1"
+        REGION="us-east-2"
         if ! aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
           echo "Bucket doesn't exist. Creating..."
           aws s3api create-bucket --bucket "$BUCKET_NAME" --region "$REGION" --create-bucket-configuration LocationConstraint="$REGION"
