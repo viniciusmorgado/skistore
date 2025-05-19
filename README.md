@@ -130,10 +130,44 @@ The production infrastructure is provisioned using **Terraform** through a fully
 
 1. **Manually create the KMS key**:
 
-   * Create the key using the AWS console or CLI
-   * Assign an alias like `alias/state-bucket-key`
-   * Apply a secure key policy
-   * Copy the ARN and save it to GitHub Secrets as `STATE_KMS_KEY_ARN`
+   You must create a secure KMS key manually before provisioning infrastructure. This key will be used to encrypt the Terraform state bucket.
+
+   * Run this command to create the key:
+
+     ```bash
+     aws kms create-key \
+       --description "KMS key for Terraform state bucket encryption" \
+       --key-usage ENCRYPT_DECRYPT \
+       --customer-master-key-spec SYMMETRIC_DEFAULT \
+       --tags TagKey=Environment,TagValue=Production
+     ```
+
+   * Assign an alias to the key:
+
+     ```bash
+     aws kms create-alias \
+       --alias-name alias/state-bucket-key \
+       --target-key-id <KEY_ID>
+     ```
+
+   * Get the ARN of the key (used in the pipeline secret):
+
+     ```bash
+     aws kms describe-key \
+       --key-id alias/state-bucket-key \
+       --query "KeyMetadata.Arn" \
+       --output text
+     ```
+
+     Example output:
+
+     ```text
+     arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+     ```
+
+   * Save this full ARN in GitHub Secrets as `STATE_KMS_KEY_ARN`
+
+   * Attach a secure policy (see project docs for policy JSON)
 
 2. **Push to `main`**:
 
