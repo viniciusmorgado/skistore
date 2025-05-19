@@ -116,7 +116,59 @@ jobs:
           else
             echo "Bucket is already versioned. Skipping changes."
           fi
+
+      - name: "[S3 Compliance] Validate bucket configuration"
+        run: |
+          errors=0
       
+          # 1. Bucket existence
+          if aws s3api head-bucket --bucket "$BUCKET_NAME" 2>/dev/null; then
+            echo "✅ Bucket exists"
+          else
+            echo "❌ Bucket does not exist"
+            errors=1
+          fi
+      
+          # 2. Encryption check
+          encryption_status=$(aws s3api get-bucket-encryption --bucket "$BUCKET_NAME" 2>/dev/null || echo "")
+          if echo "$encryption_status" | grep -q '"SSEAlgorithm": "aws:kms"'; then
+            echo "✅ Encryption set (KMS)"
+          else
+            echo "❌ Encryption not set or incorrect"
+            errors=1
+          fi
+      
+          # 3. Public access block
+          config_json=$(aws s3api get-public-access-block --bucket "$BUCKET_NAME" 2>/dev/null || echo "")
+          if echo "$config_json" | jq -e '.PublicAccessBlockConfiguration.BlockPublicAcls == true and
+                                           .PublicAccessBlockConfiguration.IgnorePublicAcls == true and
+                                           .PublicAccessBlockConfiguration.BlockPublicPolicy == true and
+                                           .PublicAccessBlockConfiguration.RestrictPublicBuckets == true' > /dev/null; then
+            echo "✅ Public access blocked"
+          else
+            echo "❌ Public access block misconfigured"
+            errors=1
+          fi
+      
+          # 4. Versioning
+          versioning_status=$(aws s3api get-bucket-versioning --bucket "$BUCKET_NAME" 2>/dev/null || echo "")
+          versioning_enabled=$(echo "$versioning_status" | jq -r '.Status // empty')
+      
+          if [[ "$versioning_enabled" == "Enabled" ]]; then
+            echo "✅ Versioning enabled"
+          else
+            echo "❌ Versioning not enabled"
+            errors=1
+          fi
+      
+          # Final gate
+          if [[ $errors -ne 0 ]]; then
+            echo "❌ One or more validations failed."
+            exit 1
+          else
+            echo "✅ All validations passed."
+          fi
+
       - name: "[Terraform] Format check"
         run: terraform fmt -check
 
@@ -177,7 +229,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # - name: Terraform Apply
+      # - name: "[Terraform] Apply"
+      #   if: steps.plan.outputs.exit_code == '2'
       #   working-directory: ./infrastructure/terraform/environments/prod
       #   run: |
       #     terraform apply -input=false -auto-approve \
@@ -188,3 +241,4 @@ jobs:
       #   env:
       #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
