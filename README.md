@@ -165,7 +165,23 @@ terraform apply -auto-approve
 
 ```bash
 terraform init
+```
+```
 terraform plan -target=module.vpc
 terraform apply -target=module.vpc -auto-approve
 ```
->>>>>>> main-generic
+
+## License
+
+Skistore is made available under the [Server Side Public License, version 1 (SSPL)](./LICENSE).
+
+You can also read the official license text at:  
+[https://www.mongodb.com/legal/licensing/server-side-public-license](https://www.mongodb.com/legal/licensing/server-side-public-license)
+
+Copyright © 2025 Vinicius Morgado
+
+This is **source-available** software: you are free to view, use, and modify the source code under the terms of the SSPL, as published by MongoDB, Inc.
+
+⚠️ **Important**: If you make the functionality of Skistore available to third parties as a service, you are required by the SSPL to release the complete source code of your service infrastructure under the same license.
+
+This project is not affiliated with, endorsed by, or sponsored by MongoDB, Inc. MongoDB is the author of the SSPL license only.
