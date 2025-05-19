@@ -155,6 +155,7 @@ jobs:
         id: plan
         working-directory: ./infrastructure/terraform/environments/prod
         run: |
+          set +e
           terraform plan -input=false -detailed-exitcode \
             -var="region=${{ secrets.AWS_REGION }}" \
             -var="project_name=${{ secrets.TF_PROJECT_NAME }}" \
