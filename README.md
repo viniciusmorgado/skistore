@@ -104,22 +104,6 @@ High level directory structure:
    dotnet run
    ```
 
-## Database Configuration
-
-**PostgreSQL**:
-
-* CPU: 1 core (min 0.5)
-* Memory: 1 GB (min 512 MB)
-* Port: 5432
-
-**Redis**:
-
-* CPU: 0.5 core
-* Memory: 256 MB
-* Port: 6379
-
-These resources are sufficient for local development.
-
 ## Infrastructure
 
 ### AWS with Terraform and GitHub Actions
