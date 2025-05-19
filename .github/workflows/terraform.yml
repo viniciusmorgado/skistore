@@ -50,24 +50,31 @@ jobs:
 
       - name: "[S3 Security] Enforce bucket encryption (KMS)"
         run: |
-          ENCRYPTION_STATUS=$(aws s3api get-bucket-encryption --bucket "$BUCKET_NAME" 2>/dev/null || true)
-          
-          if echo "$ENCRYPTION_STATUS" | grep -q '"SSEAlgorithm": "aws:kms"'; then
-            echo "Bucket is already encrypted with KMS. Skipping."
+          EXPECTED_KEY_ARN="${{ secrets.STATE_KMS_KEY_ARN }}"
+      
+          encryption_status=$(aws s3api get-bucket-encryption --bucket "$BUCKET_NAME" 2>/dev/null || echo "")
+      
+          actual_key_arn=$(echo "$encryption_status" | jq -r '.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.KMSMasterKeyID // empty')
+          algo=$(echo "$encryption_status" | jq -r '.ServerSideEncryptionConfiguration.Rules[0].ApplyServerSideEncryptionByDefault.SSEAlgorithm // empty')
+      
+          if [[ "$algo" == "aws:kms" && "$actual_key_arn" == "$EXPECTED_KEY_ARN" ]]; then
+            echo "✅ Bucket encryption is already correctly configured with KMS key: $EXPECTED_KEY_ARN"
           else
-          
-          echo "Applying encryption settings..."
-          aws s3api put-bucket-encryption --bucket "$BUCKET_NAME" --server-side-encryption-configuration '{
-            "Rules": [
-              {
-                "ApplyServerSideEncryptionByDefault": {
-                  "SSEAlgorithm": "aws:kms"
+            echo "⚠️  Bucket encryption is missing or misconfigured."
+            echo "Applying correct KMS encryption settings..."
+            aws s3api put-bucket-encryption --bucket "$BUCKET_NAME" --server-side-encryption-configuration "{
+              \"Rules\": [
+                {
+                  \"ApplyServerSideEncryptionByDefault\": {
+                    \"SSEAlgorithm\": \"aws:kms\",
+                    \"KMSMasterKeyID\": \"$EXPECTED_KEY_ARN\"
+                  }
                 }
-              }
-            ]
-          }'
+              ]
+            }"
+            echo "✅ Bucket encryption updated with KMS key: $EXPECTED_KEY_ARN"
           fi
- 
+      
       - name: "[S3 Security] Enforce PublicAccessBlock settings"
         run: |
           CONFIG_JSON=$(aws s3api get-public-access-block --bucket "$BUCKET_NAME" 2>/dev/null || echo "")
