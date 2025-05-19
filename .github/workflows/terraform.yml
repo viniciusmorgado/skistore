@@ -236,16 +236,15 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      # - name: "[Terraform] Apply"
-      #   if: steps.plan.outputs.exit_code == '2'
-      #   working-directory: ./infrastructure/terraform/environments/prod
-      #   run: |
-      #     terraform apply -input=false -auto-approve \
-      #       -var="region=${{ secrets.AWS_REGION }}" \
-      #       -var="project_name=${{ secrets.TF_PROJECT_NAME }}" \
-      #       -var="db_user=${{ secrets.TF_DB_USER }}" \
-      #       -var="db_pass=${{ secrets.TF_DB_PASS }}"
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+      - name: "[Terraform] Apply"
+        if: steps.plan.outputs.exit_code == '2'
+        working-directory: ./infrastructure/terraform/environments/prod
+        run: |
+          terraform apply -input=false -auto-approve \
+            -var="region=${{ secrets.AWS_REGION }}" \
+            -var="project_name=${{ secrets.TF_PROJECT_NAME }}" \
+            -var="db_user=${{ secrets.TF_DB_USER }}" \
+            -var="db_pass=${{ secrets.TF_DB_PASS }}"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
