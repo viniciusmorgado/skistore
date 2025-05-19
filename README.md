@@ -1,23 +1,37 @@
-# Ski Store Monorepo
+# SkiStore Monorepo
 
-Monorepo for the SkiStore ecommerce application
+Monorepo for the SkiStore eShop application with Angular (TypeScript) and ASP.NET Core (C#)
 
 High level directory structure:
 
-- client/ - Angular frontend application
-- server/ - C# .NET Backend Application
-- infrastructure - DevOps and infra files (Terraform/AWS, Docker, Apache Airflow DAGs)
+* `client/` - Angular frontend application
+* `server/` - C# .NET Backend Application
+* `infrastructure/` - DevOps and infra files (Terraform/AWS, Docker, Apache Airflow DAGs)
 
 ## Development Requirements
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [Git](https://git-scm.com/)
+* [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download)
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+* [Git](https://git-scm.com/)
 
 ## Production Requirements
 
-- [AWS CLI](https://aws.amazon.com/cli/) (for cloud deployments)
-- Docker (for on-premise deployments)
+* [AWS CLI](https://aws.amazon.com/cli/) (configured with credentials for your AWS account)
+* [GitHub Actions](https://github.com/features/actions)
+
+### Required GitHub Secrets
+
+| Secret Name                 | Description                                                                                                             |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `AWS_ACCESS_KEY_ID`         | Access key ID for an IAM user with permissions to manage AWS infrastructure and resources.                              |
+| `AWS_SECRET_ACCESS_KEY`     | Secret access key paired with the IAM access key. Used for authenticating Terraform and pipeline operations.            |
+| `AWS_REGION`                | AWS region where all infrastructure will be provisioned (e.g., `us-east-1`).                                            |
+| `STATE_BUCKET_NAME`         | Name of the S3 bucket that stores the Terraform state file. Must be globally unique.                                    |
+| `LOCK_IN_DYNAMO_TABLE_NAME` | Name of the DynamoDB table used by Terraform to lock the state file during apply operations (prevents race conditions). |
+| `TF_PROJECT_NAME`           | Project identifier used for resource naming, tagging, and isolation (e.g., `my-app-prod`).                              |
+| `TF_DB_USER`                | Username for the PostgreSQL database provisioned by Terraform.                                                          |
+| `TF_DB_PASS`                | Password for the PostgreSQL database user. Ensure strong password complexity.                                           |
+| `STATE_KMS_KEY_ARN`         | ARN of the KMS key used to encrypt the Terraform state bucket. This must be created and configured manually.            |
 
 ## Getting Started (Development)
 
@@ -66,7 +80,7 @@ High level directory structure:
 
 3. **Create a `.env` file**:
 
-   Inside `infrastructure/containers/docker`, create a `.env` file:
+   Inside `infrastructure/docker`, create a `.env` file:
 
    ```bash
    POSTGRES_USER=your_username
@@ -77,7 +91,7 @@ High level directory structure:
 
 4. **Start Docker containers**:
 
-   Navigate to `infrastructure/containers/docker` and run:
+   Navigate to `infrastructure/docker` and run:
 
    ```bash
    docker-compose up -d
@@ -93,89 +107,93 @@ High level directory structure:
 ## Database Configuration
 
 **PostgreSQL**:
-- CPU: 1 core (min 0.5)
-- Memory: 1 GB (min 512 MB)
-- Port: 5432
+
+* CPU: 1 core (min 0.5)
+* Memory: 1 GB (min 512 MB)
+* Port: 5432
 
 **Redis**:
-- CPU: 0.5 core
-- Memory: 256 MB
-- Port: 6379
+
+* CPU: 0.5 core
+* Memory: 256 MB
+* Port: 6379
 
 These resources are sufficient for local development.
 
-<<<<<<< HEAD
-## Contributing
-
-This project demonstrates two different approaches to repository implementation:
-
-1. **Main Repository (Traditional Pattern)**
-    - Located in the main repository
-    - Uses conventional repository pattern implementation
-
-2. **Main-Generic Repository**
-    - Implements generic repository with specification pattern
-    - Available in the generic repository branch
-
-### Contribution Guidelines
-
-When contributing to this project:
-1. Assess your use case requirements
-2. Choose the appropriate repository implementation
-3. Follow the existing pattern in your chosen branch
-4. Maintain consistent code style
-5. Include unit tests for new features
-
-The choice between implementations should be based on your specific project requirements and needs.
-=======
 ## Infrastructure
 
-### AWS with Elastic Beanstalk and Terraform
+### AWS with Terraform and GitHub Actions
 
-We use Terraform to manage AWS Elastic Beanstalk infrastructure.
+The production infrastructure is provisioned using **Terraform** through a fully automated **GitHub Actions pipeline**.
 
-**Important:** Terraform state (`terraform.tfstate`) is sensitive and not committed to Git. It is stored in an S3 bucket.
+#### Initial Setup
 
-**Create the S3 bucket manually:**
+1. **Manually create the KMS key**:
+
+   * Create the key using the AWS console or CLI
+   * Assign an alias like `alias/state-bucket-key`
+   * Apply a secure key policy
+   * Copy the ARN and save it to GitHub Secrets as `STATE_KMS_KEY_ARN`
+
+2. **Push to `main`**:
+
+   The GitHub Actions pipeline will automatically:
+
+   * Create the S3 state bucket
+   * Apply encryption, access block, and versioning settings
+   * Create the DynamoDB lock table
+   * Validate and apply all Terraform-managed infrastructure
+
+#### Terraform Manual Usage (optional)
+
+To run Terraform locally (optional but supported):
 
 ```bash
-aws s3api create-bucket \
-  --bucket skistore-state-bucket \
-  --region us-east-2 \
-  --create-bucket-configuration LocationConstraint=us-east-2
-```
-
-**On Windows (no line breaks):**
-
-```bash
-aws s3api create-bucket --bucket skistore-state-bucket --region us-east-2 --create-bucket-configuration LocationConstraint=us-east-2
-```
-
-**Apply Infrastructure:**
-
-Inside `infrastructure/iac/terraform/environments/prod`, run:
-
-```bash
+cd infrastructure/iac/terraform/environments/prod
 terraform init
 terraform plan
 terraform apply -auto-approve
 ```
 
-**Apply Specific Module:**
+To target a specific module:
 
 ```bash
-terraform init
-```
-```
 terraform plan -target=module.vpc
 terraform apply -target=module.vpc -auto-approve
+```
+
+#### Destroying the Infrastructure
+
+To fully remove the infrastructure:
+
+1. **Run Terraform destroy**:
+
+```bash
+terraform destroy \
+  -var="region=..." \
+  -var="project_name=..." \
+  -var="db_user=..." \
+  -var="db_pass=..."
+```
+
+2. **Manually delete Terraform backend resources**:
+
+```bash
+aws s3 rb s3://<STATE_BUCKET_NAME> --force
+aws dynamodb delete-table --table-name <LOCK_IN_DYNAMO_TABLE_NAME>
+```
+
+3. **(Optional)** Schedule deletion of the KMS key:
+
+```bash
+aws kms schedule-key-deletion --key-id <KMS_KEY_ID> --pending-window-in-days 7
 ```
 
 ## License
 
 Skistore is made available under the [Server Side Public License, version 1 (SSPL)](./LICENSE).
 
-You can also read the official license text at:  
+You can also read the official license text at:
 [https://www.mongodb.com/legal/licensing/server-side-public-license](https://www.mongodb.com/legal/licensing/server-side-public-license)
 
 Copyright © 2025 Vinicius Morgado
